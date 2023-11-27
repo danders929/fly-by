@@ -4,8 +4,8 @@
 
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
-import App from './App'
-import "@testing-library/jest-dom/extend-expect"
+import Login from '../client/features/auth/Login'
+// import "@testing-library/jest-dom/extend-expect"
 
 describe('Login tests', () => {
   test('renders Login component', () => {
