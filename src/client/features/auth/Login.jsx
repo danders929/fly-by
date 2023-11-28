@@ -22,7 +22,14 @@ export default function Login(){
             >
             </input>
           </label>
+          <label>
+            Password:
+            <input
+              type="password">
+            </input>
+          </label>
           <button>SIGN IN</button>
+          <button>SIGN UP</button>
         </form>
       </body>
     </>
