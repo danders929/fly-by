@@ -11,14 +11,16 @@ import Tasks from "./features/tasks/Tasks";
 import Root from "./layout/Root.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Register from "./features/auth/Register.jsx";
+import Login from "./features/auth/Login.jsx"
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
     children: [
       { path: "/", element: <Tasks /> },
-      { path: "/tasks", element: <Tasks /> },
-      { path: "/login", element: <AuthForm /> },
+      { path: "/login", element: <Login /> },
+      { path: "/register", element: <Register /> },
     ],
   },
 ]);
