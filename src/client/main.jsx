@@ -14,6 +14,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Register from "./features/auth/Register.jsx";
 import Login from "./features/auth/Login.jsx"
 import Home from "./features/main/Home.jsx"
+import NewLog from "./features/main/pilot/NewLog.jsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,6 +25,7 @@ const router = createBrowserRouter([
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
       { path: "/pilot/:id/home", element: <Home />},
+      { path: "/pilot/:id/new_log", element: <NewLog />}
     ],
   },
 ]);
