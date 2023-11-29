@@ -14,12 +14,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Register from "./features/auth/Register.jsx";
 import Login from "./features/auth/Login.jsx"
 import PilotDetails from "./features/main/pilot/PilotDetails.jsx";
+import PilotDetailsForm from "./features/main/pilot/PilotDetailsForm.jsx";
 import Home from "./features/main/Home.jsx"
 import NewLog from "./features/main/pilot/NewLog.jsx";
 import Flight from "./features/main/pilot/Flight.jsx";
 import FlightLog from "./features/main/pilot/FlightLog.jsx";
 import FlightDetails from "./features/main/pilot/FlightDetails.jsx";
 import FlightDetailsForm from "./features/main/pilot/FlightDetailsForm.jsx";
+
 
 
 const router = createBrowserRouter([
@@ -31,6 +33,7 @@ const router = createBrowserRouter([
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
       { path: "/pilot/:id", element: <PilotDetails />},
+      { path: "/pilot/:id/update", element: <PilotDetailsForm />},
       { path: "/pilot/:id/home", element: <Home />},
       { path: "/pilot/:id/new_log", element: <NewLog />},
       { path: "/pilot/:id/flight/:flt_id", element: <Flight />},
