@@ -17,6 +17,7 @@ import Home from "./features/main/Home.jsx"
 import NewLog from "./features/main/pilot/NewLog.jsx";
 import Flight from "./features/main/pilot/Flight.jsx";
 import FlightLog from "./features/main/pilot/FlightLog.jsx";
+import FlightDetails from "./features/main/pilot/FlightDetails.jsx";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
       { path: "/pilot/:id/new_log", element: <NewLog />},
       { path: "/pilot/:id/flight/:flt_id", element: <Flight />},
       { path: "/pilot/:id/flight_log", element: <FlightLog />},
+      { path: "/pilot/:id/flight_log/:flt_id", element: <FlightDetails />}
     ],
   },
 ]);
