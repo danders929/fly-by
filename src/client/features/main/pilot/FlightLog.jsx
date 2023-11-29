@@ -11,6 +11,7 @@ export default function FlightLog(){
   const totalSoloFlightHours = 0.0;
   const singleEngineHours = 0.0;
   const multiEngineHours = 0.0;
+  const pilotName = ""; // Placeholder for getting pilot name
   
   return (
     <>
@@ -20,7 +21,7 @@ export default function FlightLog(){
         <button>Profile</button>
         <button>Logout</button>
         <h1>Fly-By</h1>
-        <h2>{pilot.name}'s Flight Log</h2>
+        <h2>{pilotName}'s Flight Log</h2>
       </header>
       <body>
         <section>

@@ -5,8 +5,24 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { MemoryRouter, BrowserRouter } from 'react-router-dom'
-import Login from '../client/features/auth/Login'
 import "@testing-library/jest-dom"
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Login from '../client/features/auth/Login.jsx';
+import Register from '../client/features/auth/Register.jsx';
+import Home from '../client/features/main/Home.jsx';
+import NewLog from '../client/features/main/pilot/NewLog.jsx';
+import Flight from '../client/features/main/pilot/Flight.jsx';
+import FlightLog from '../client/features/main/pilot/FlightLog.jsx';
+import FlightDetails from '../client/features/main/pilot/FlightDetails.jsx';
+import FlightDetailsForm from '../client/features/main/pilot/FlightDetailsForm.jsx';
+import PilotDetails from '../client/features/main/pilot/PilotDetails.jsx';
+import PilotDetailsForm from '../client/features/main/pilot/PilotDetailsForm.jsx';
+import AircraftList from '../client/features/main/aircraft/AircraftList.jsx';
+import AircraftDetails from '../client/features/main/aircraft/AircraftDetails.jsx';
+import AircraftNewForm from '../client/features/main/aircraft/AircraftNewForm.jsx';
+import AircraftDetailsForm from '../client/features/main/aircraft/AircraftDetailsForm.jsx';
+
+
 
 describe('Authorization tests', () => {
   test('renders Login component', () => {
@@ -61,7 +77,7 @@ describe('Flight Log', () => {
   // Test that logout logs user out and navigates to /login
 
   test('renders Flight component', () => {
-    render(<Flight />)
+    render(<Flight/>)
     // Test that Home button exists
     // Test that Home navigates user to pilot/:id/home
     // Test that profile nav link exists
@@ -82,7 +98,7 @@ describe('Flight Log', () => {
   })
 
   test('renders FlightUpdateForm component', () => {
-    render(<FlightUpdateForm />)
+    render(<FlightDetailsForm />)
   })
 })
 
@@ -92,21 +108,25 @@ describe('Pilot', () => {
   })
 
   test('renders PilotUpdateForm component', () => {
-    render(<PilotUpdateForm />)
+    render(<PilotDetailsForm />)
   })
 })
 
 describe('Aircraft', () => {
-  test('renders App component', () => {
-    render(<Aircraft />)
+  test('renders AircraftList component', () => {
+    render(<AircraftList />)
+  })
+
+  test('renders AircraftDetails component', () => {
+    render(<AircraftDetails />)
   })
 
   test('renders NewAircraft component', () => {
-    render(<NewAircraftForm />)
+    render(<AircraftNewForm />)
   })
 
   test('renders AircraftUpdateForm component', () => {
-    render(<AircraftUpdateForm />)
+    render(<AircraftDetailsForm />)
   })
 })
 

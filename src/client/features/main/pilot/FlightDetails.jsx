@@ -3,6 +3,17 @@ import react from "@vitejs/plugin-react-swc";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const flight = { // Placeholder object for flight
+                name: null,
+                aircraft: {singleEngine: false},
+                solo: false,
+                picId: {name: null},
+                sicId: {name: null},
+                date: null,
+                departure: null,
+                arrival: null,
+
+               }; 
 function checkEngineType(){
   if(flight.aircraft.singleEngine){
     return "Single Engine"
@@ -14,6 +25,10 @@ function checkEngineType(){
 export default function FlightDetails(){
   const navigate = useNavigate;
   const engineType = checkEngineType();
+  const engineRuntime = 0.0;
+  const totalFlightTime = 0.0;
+  const dayFlightHours = 0.0;
+  const nightFlightHours = 0.0;
 
   
   return (

@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react-swc";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const aircraft = {}; // Placeholder Object for aircraft
+
 function checkEngineType(){
   if(aircraft.singleEngine){
     return "Single Engine"

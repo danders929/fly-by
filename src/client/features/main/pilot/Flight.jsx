@@ -10,7 +10,7 @@ export default function Flight(){
   const totalFlightTime = 0.00;
   const dayFlightTime = 0.00;
   const nightFlightTime = 0.00;
-
+  const flight = {}; //placeholder object for getting flight details
   return (
     <>
       <header>
@@ -19,7 +19,7 @@ export default function Flight(){
         <button>Profile</button>
         <button>Logout</button>
         <h1>Fly-By</h1>
-        <h2>Flight: {fltId.name}</h2>
+        <h2>Flight: {flight.name}</h2>
       </header>
       <body>
         <button>Day</button>

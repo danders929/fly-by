@@ -2,7 +2,8 @@ import React from "react";
 import react from "@vitejs/plugin-react-swc";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Aircraft from "./AircraftDetails";
+
+const aircraft = {}; // Placeholder object for aircraft
 
 export default function AircraftDetailsForm(){
   const navigate = useNavigate;

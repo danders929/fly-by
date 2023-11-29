@@ -3,6 +3,11 @@ import react from "@vitejs/plugin-react-swc";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const pilot = {
+                firstName: null,
+                lastName: null,
+                email: null,
+              }
 export default function PilotDetails(){
   const navigate = useNavigate;
   return (
