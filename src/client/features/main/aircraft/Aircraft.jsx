@@ -11,7 +11,7 @@ function checkEngineType(){
   }
 }
 
-export default function Aircraft(){
+export default function AircraftDetails(){
   const navigate = useNavigate;
   const engineType = checkEngineType();
   return (
