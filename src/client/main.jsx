@@ -22,6 +22,7 @@ import FlightLog from "./features/main/pilot/FlightLog.jsx";
 import FlightDetails from "./features/main/pilot/FlightDetails.jsx";
 import FlightDetailsForm from "./features/main/pilot/FlightDetailsForm.jsx";
 import Aircraft from "./features/main/aircraft/Aircraft.jsx";
+import AircraftNewForm from "./features/main/aircraft/AircraftNewForm.jsx";
 
 
 
@@ -41,7 +42,9 @@ const router = createBrowserRouter([
       { path: "/pilot/:id/flight_log", element: <FlightLog />},
       { path: "/pilot/:id/flight_log/:flt_id", element: <FlightDetails />},
       { path: "/pilot/:id/flight_log/:flt_id/update", element: <FlightDetailsForm />},
-      { path: "/aircraft/:id", element: <Aircraft />}
+      { path: "/aircraft/:id", element: <Aircraft />},
+      { path: "/aircraft/new_form", element: <AircraftNewForm />},
+      
     ],
   },
 ]);
