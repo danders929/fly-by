@@ -15,6 +15,7 @@ import Register from "./features/auth/Register.jsx";
 import Login from "./features/auth/Login.jsx"
 import Home from "./features/main/Home.jsx"
 import NewLog from "./features/main/pilot/NewLog.jsx";
+import Flight from "./features/main/pilot/Flight.jsx";
 
 const router = createBrowserRouter([
   {
@@ -25,7 +26,8 @@ const router = createBrowserRouter([
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
       { path: "/pilot/:id/home", element: <Home />},
-      { path: "/pilot/:id/new_log", element: <NewLog />}
+      { path: "/pilot/:id/new_log", element: <NewLog />},
+      { path: "/pilot/:id/flight/:flt_id", element: <Flight />}
     ],
   },
 ]);
