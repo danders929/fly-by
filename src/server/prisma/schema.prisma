@@ -10,17 +10,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  password String
-  tasks    Task[]
+model Pilot {
+  id           Int      @id @default(autoincrement())
+  firstName    String
+  lastName     String
+  email        String   @unique
+  password     String
+  flights      Flight[] @relation("FlightPilots")
+  flightsAsPic Flight[] @relation("FlightPic")
+  flightsAsSic Flight[] @relation("FlightSic")
 }
 
-model Task {
-  id          Int     @id @default(autoincrement())
-  description String
-  done        Boolean @default(false)
-  userId      Int
-  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Flight {
+  id              Int          @id @default(autoincrement())
+  solo            Boolean
+  picId           Int
+  sicId           Int?
+  aircraftId      Int
+  date            DateTime
+  departure       String
+  arrival         String
+  engineStartTime DateTime
+  engineStopTime  DateTime?
+  FlightTimes     FlightTime[]
+  pilots          Pilot[]      @relation("FlightPilots")
+  pic             Pilot        @relation("FlightPic", fields: [picId], references: [id])
+  sic             Pilot?       @relation("FlightSic", fields: [sicId], references: [id])
+  aircraft        Aircraft     @relation(fields: [aircraftId], references: [id])
+    
+}
+
+model FlightTime {
+  id          Int      @id @default(autoincrement())
+  flightId    Int
+  timeStart   DateTime
+  timeStop    DateTime
+  dayFlight   Boolean
+  nightFlight Boolean
+  flight      Flight   @relation(fields: [flightId], references: [id])
+}
+
+model Aircraft {
+  id           Int      @id @default(autoincrement())
+  makeModel    String
+  tailNum      String
+  singleEngine Boolean
+  hobbs        Float
+  flights      Flight[]
 }
