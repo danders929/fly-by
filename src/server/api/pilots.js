@@ -5,7 +5,11 @@ module.exports = router;
 // /api/pilots - GET all pilots
 router.get("/", async (req, res, next) => {
   try {
-    const pilots = await prisma.pilot.findMany();
+    const pilots = await prisma.pilot.findMany({
+      include: {
+        flights: true,
+      },
+    });
     res.json(pilots);
   } catch (err) {
     next(err);
@@ -19,6 +23,9 @@ router.get("/:id", async (req, res, next) => {
     const result = await prisma.pilot.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        flights: true,
       },
     });
     if (!result) {

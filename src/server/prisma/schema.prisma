@@ -16,7 +16,7 @@ model Pilot {
   lastName     String
   email        String   @unique
   password     String
-  flights      Flight[]
+  flights      Flight[] @relation("FlightPilots")
   flightsAsPic Flight[] @relation("FlightPic")
   flightsAsSic Flight[] @relation("FlightSic")
 }
@@ -31,13 +31,13 @@ model Flight {
   departure       String
   arrival         String
   engineStartTime DateTime
-  engineStopTime  DateTime
+  engineStopTime  DateTime?
   FlightTimes     FlightTime[]
+  pilots          Pilot[]      @relation("FlightPilots")
   pic             Pilot        @relation("FlightPic", fields: [picId], references: [id])
   sic             Pilot?       @relation("FlightSic", fields: [sicId], references: [id])
   aircraft        Aircraft     @relation(fields: [aircraftId], references: [id])
-  pilot           Pilot?       @relation(fields: [pilotId], references: [id])
-  pilotId         Int?
+    
 }
 
 model FlightTime {
