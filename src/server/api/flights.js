@@ -5,7 +5,11 @@ module.exports = router;
 // /api/flights - GET all flights
 router.get("/", async (req, res, next) => {
   try {
-    const flights = await prisma.flight.findMany();
+    const flights = await prisma.flight.findMany({
+      include: {
+        FlightTimes: true,
+      }
+    });
     res.json(flights);
   } catch (err) {
     next(err);
@@ -19,6 +23,9 @@ router.get("/:id", async (req, res, next) => {
     const result = await prisma.flight.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        FlightTimes: true,
       },
     });
     if (!result) {
@@ -37,7 +44,7 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const { solo, picId, sicId, aircraftId, date, departure, arrival, engineStartTime, } = req.body;
-    if (!picId || !lastName || !email || !password) {
+    if (!picId || !tailNumber || !departure || !arrival) {
       const error = {
         status: 400,
         message: "PIC, TailNumber, Departure, and Arrival fields are required.",

@@ -24,7 +24,8 @@ const createApp = async () => {
   app.use("/api", require("./api"));
   app.use("/api/pilots", require("./api/pilots"));
   app.use("/api/aircraft", require("./api/aircraft"));
-  app.use("/api/flights", require("./api/flights"))
+  app.use("/api/flights", require("./api/flights"));
+  app.use("/api/flightTimes", require("./api/flightTimes"));
 
   
 
