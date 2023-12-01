@@ -7,7 +7,11 @@ router.get("/", async (req, res, next) => {
   try {
     const aircraft = await prisma.aircraft.findMany({
       include: {
-        flights: true,
+        flights: {
+          include: {
+            FlightTimes: true,
+          },
+        },
       },
     });
     res.json(aircraft);
@@ -25,7 +29,11 @@ router.get("/:id", async (req, res, next) => {
         id: id,
       },
       include: {
-        flights: true,
+        flights: {
+          include: {
+            FlightTimes: true,
+          },
+        },
       },
     });
     if (!result) {
