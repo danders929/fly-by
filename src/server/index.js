@@ -26,6 +26,9 @@ const createApp = async () => {
   // /api/pilots
   app.use("/api/pilots", require("./api/pilots"));
 
+  // /api/aircraft
+  app.use("./api/aircraft", require("./api/aircraft"));
+
   // Serve static HTML in production & Vite dev server in development
   if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.resolve(__dirname, "../../dist/")));
