@@ -19,7 +19,7 @@ router.get("/", async (req, res, next) => {
 // /api/flightTimes/:id - GET the details of flightTime specified by the id
 router.get("/:id", async (req, res, next) => {
   try {
-    const id = +req.params.flt_id;
+    const id = +req.params.id;
     const result = await prisma.flightTime.findUnique({
       where: {
         id: id,
