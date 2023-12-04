@@ -5,9 +5,6 @@ import "./index.less";
 
 import { Provider } from "react-redux";
 import store from "./store";
-
-import AuthForm from "./features/auth/AuthForm";
-import Tasks from "./features/tasks/Tasks";
 import Root from "./layout/Root.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -25,9 +22,6 @@ import AircraftList from "./features/main/aircraft/AircraftList.jsx";
 import AircraftDetails from "./features/main/aircraft/AircraftDetails.jsx";
 import AircraftNewForm from "./features/main/aircraft/AircraftNewForm.jsx";
 import AircraftDetailsForm from "./features/main/aircraft/AircraftDetailsForm.jsx";
-
-
-
 
 const router = createBrowserRouter([
   {

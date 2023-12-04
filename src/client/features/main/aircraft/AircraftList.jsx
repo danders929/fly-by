@@ -1,5 +1,5 @@
 import React from "react";
-import react from "@vitejs/plugin-react-swc";
+// import react from "@vitejs/plugin-react-swc";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 

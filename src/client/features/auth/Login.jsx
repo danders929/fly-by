@@ -1,5 +1,5 @@
 import React from "react";
-import react from "@vitejs/plugin-react-swc";
+// import react from "@vitejs/plugin-react-swc";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,7 +11,7 @@ export default function Login(){
         <p>Image PlaceHolder</p>
         <h1>Fly-By</h1>
       </header>
-      <body>
+      <section>
         <form>
           <label>
             E-mail
@@ -31,7 +31,7 @@ export default function Login(){
           <button>SIGN IN</button>
           <button>SIGN UP</button>
         </form>
-      </body>
+      </section>
     </>
   )
 }
