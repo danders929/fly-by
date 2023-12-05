@@ -31,7 +31,7 @@ const router = createBrowserRouter([
       { path: "/authForm", element: <AuthForm /> },
       { path: "/pilot/:id", element: <PilotDetails />},
       { path: "/pilot/:id/update", element: <PilotDetailsForm />},
-      { path: "/pilot/:id/home", element: <Home />},
+      { path: "/home", element: <Home />},
       { path: "/pilot/:id/new_log", element: <NewLog />},
       { path: "/pilot/:id/flight/:flt_id", element: <Flight />},
       { path: "/pilot/:id/flight_log", element: <FlightLog />},
