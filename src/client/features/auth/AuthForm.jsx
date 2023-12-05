@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLoginMutation, useRegisterMutation } from "./authSlice";
+import { useLoginMutation, useRegisterMutation, selectId } from "./authSlice";
+import { useSelector } from "react-redux";
 
 /** This form allows users to register or log in. */
 export default function AuthForm() {
@@ -22,7 +23,8 @@ export default function AuthForm() {
     useLoginMutation();
   const [register, { isLoading: registerLoading, error: registerError }] =
     useRegisterMutation();
-
+  const id = useSelector(selectId);
+  
   /** Send the requested authentication action to the API */
   const attemptAuth = async (evt) => {
     evt.preventDefault();
@@ -35,7 +37,7 @@ export default function AuthForm() {
     // so we can use a try/catch to handle it.
     try {
       await authMethod(credentials).unwrap();
-      navigate(`/pilot/1`);
+      navigate(`/pilot/${id}`);
     } catch (err) {
       console.error(err);
     }
