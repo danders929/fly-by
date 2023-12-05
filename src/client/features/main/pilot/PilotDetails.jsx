@@ -1,7 +1,8 @@
 import React from "react";
-// import react from "@vitejs/plugin-react-swc";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { selectId } from "../../auth/authSlice";
 
 const pilot = {
                 firstName: null,
@@ -9,7 +10,11 @@ const pilot = {
                 email: null,
               }
 export default function PilotDetails(){
-  const navigate = useNavigate;
+  const navigate = useNavigate();
+  const id = useSelector(selectId)
+  const handleNavClick = (navLink) => {
+    navigate(navLink);
+  }
   return (
     <>
       <header>
@@ -25,7 +30,7 @@ export default function PilotDetails(){
         <p>Last Name {pilot.lastName}</p>
         <p>Email Address: {pilot.email}</p>
       </section>
-      <button>Edit</button>
+      <button onClick={() => handleNavClick(`/pilot/${id}/update`)}>Edit</button>
     </>
   )
 }
