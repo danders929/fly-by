@@ -27,11 +27,13 @@ export const { useRegisterMutation, useLoginMutation } = authApi;
 
 /** Session storage key for auth token */
 const TOKEN_KEY = "token";
+const USER_ID = "userId"
 
 /** Reducer that stores payload's token in state and session storage */
 const storeToken = (state, { payload }) => {
   state.token = payload.token;
   sessionStorage.setItem(TOKEN_KEY, payload.token);
+  sessionStorage.setItem(USER_ID, payload.userId);
 };
 
 /** Keeps track of JWT sent from API */
@@ -39,11 +41,13 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     token: sessionStorage.getItem(TOKEN_KEY),
+    id: sessionStorage.getItem(USER_ID),
   },
   reducers: {
     /** Logging out means wiping the stored token */
     logout: (state) => {
       state.token = null;
+      state.id = null;
       sessionStorage.removeItem(TOKEN_KEY);
     },
   },
@@ -57,5 +61,6 @@ const authSlice = createSlice({
 export const { logout } = authSlice.actions;
 
 export const selectToken = (state) => state.auth.token;
+export const selectId = (state) => state.auth.id;
 
 export default authSlice.reducer;

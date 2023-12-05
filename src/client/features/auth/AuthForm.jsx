@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLoginMutation, useRegisterMutation } from "./authSlice";
+import { selectId, useLoginMutation, useRegisterMutation } from "./authSlice";
+import { useSelector } from "react-redux";
+
 
 /** This form allows users to register or log in. */
 export default function AuthForm() {
   const navigate = useNavigate();
 
+  const id = useSelector(selectId);
   // Handles swapping between login and register
   const [isLogin, setIsLogin] = useState(true);
   const authAction = isLogin ? "Login" : "Register";
@@ -14,8 +17,10 @@ export default function AuthForm() {
     : "Already have an account? Login here.";
 
   // Controlled form fields
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // Store userId from state
 
   // Form submission
   const [login, { isLoading: loginLoading, error: loginError }] =
@@ -28,14 +33,15 @@ export default function AuthForm() {
     evt.preventDefault();
 
     const authMethod = isLogin ? login : register;
-    const credentials = { username, password };
-
+    const credentials = { email, password };
+    
     // We don't want to navigate if there's an error.
     // `unwrap` will throw an error if there is one
     // so we can use a try/catch to handle it.
     try {
       await authMethod(credentials).unwrap();
-      navigate("/");
+      //TODO: Check if profile exists, if so navigate to home. Else, navigate to pilotUpdate
+      navigate(`/pilot/${id}/home`);
     } catch (err) {
       console.error(err);
     }
@@ -43,24 +49,30 @@ export default function AuthForm() {
 
   return (
     <>
-      <h1>{authAction}</h1>
+      <header>
+        <p>Image PlaceHolder</p>
+        <h2>{authAction}</h2>
+      </header>
       <form onSubmit={attemptAuth}>
         <label>
-          Username
+          Email:
           <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            autoComplete="username"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+            id="email"
           />
         </label>
+        <br />
         <label>
-          Password
+          Password:
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
+            id="password"
           />
         </label>
         <button>{authAction}</button>

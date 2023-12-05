@@ -4,19 +4,12 @@ const prisma = require("../prisma");
 const seed = async () => {
   await prisma.user.upsert({
     where: {
-      username: "foo",
+      email: "foo@bar.com",
     },
     update: {},
     create: {
-      username: "foo",
+      email: "foo@bar.com",
       password: "bar",
-      tasks: {
-        create: [
-          { description: "task 1" },
-          { description: "task 2" },
-          { description: "task 3" },
-        ],
-      },
     },
   });
 };

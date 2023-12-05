@@ -22,6 +22,7 @@ const createApp = async () => {
 
   // API routes
   app.use("/api", require("./api"));
+  app.use("/api/auth", require("./api/auth/index.js"))
   app.use("/api/pilots", require("./api/pilots"));
   app.use("/api/aircraft", require("./api/aircraft"));
   app.use("/api/flights", require("./api/flights"));

@@ -8,27 +8,27 @@ module.exports = router;
 /** Creates new account and returns token */
 router.post("/register", async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     // Check if username and password provided
-    if (!username || !password) {
+    if (!email || !password) {
       throw new ServerError(400, "Username and password required.");
     }
 
     // Check if account already exists
     const user = await prisma.user.findUnique({
-      where: { username },
+      where: { email },
     });
     if (user) {
       throw new ServerError(
         400,
-        `Account with username ${username} already exists.`
+        `Account with the email address "${email}" already exists.`
       );
     }
 
     // Create new user
     const newUser = await prisma.user.create({
-      data: { username, password },
+      data: { email, password },
     });
 
     const token = jwt.sign({ id: newUser.id });
@@ -41,21 +41,21 @@ router.post("/register", async (req, res, next) => {
 /** Returns token for account if credentials valid */
 router.post("/login", async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     // Check if username and password provided
-    if (!username || !password) {
-      throw new ServerError(400, "Username and password required.");
+    if (!email || !password) {
+      throw new ServerError(400, "email and password required.");
     }
 
     // Check if account exists
     const user = await prisma.user.findUnique({
-      where: { username },
+      where: { email },
     });
     if (!user) {
       throw new ServerError(
         400,
-        `Account with username ${username} does not exist.`
+        `Account with the email address "${email}" does not exist.`
       );
     }
 
@@ -66,7 +66,8 @@ router.post("/login", async (req, res, next) => {
     }
 
     const token = jwt.sign({ id: user.id });
-    res.json({ token });
+    const userId = user.id;
+    res.json({ token, userId });
   } catch (err) {
     next(err);
   }

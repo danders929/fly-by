@@ -8,8 +8,7 @@ import store from "./store";
 import Root from "./layout/Root.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Register from "./features/auth/Register.jsx";
-import Login from "./features/auth/Login.jsx"
+import AuthForm from "./features/auth/AuthForm.jsx";
 import PilotDetails from "./features/main/pilot/PilotDetails.jsx";
 import PilotDetailsForm from "./features/main/pilot/PilotDetailsForm.jsx";
 import Home from "./features/main/Home.jsx"
@@ -28,9 +27,8 @@ const router = createBrowserRouter([
     path: "/",
     element: <Root />,
     children: [
-      { path: "/", element: <Login /> },
-      { path: "/login", element: <Login /> },
-      { path: "/register", element: <Register /> },
+      { path: "/", element: <AuthForm /> },
+      { path: "/authForm", element: <AuthForm /> },
       { path: "/pilot/:id", element: <PilotDetails />},
       { path: "/pilot/:id/update", element: <PilotDetailsForm />},
       { path: "/pilot/:id/home", element: <Home />},

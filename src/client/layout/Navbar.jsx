@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { logout, selectToken } from "../features/auth/authSlice";
+import { logout, selectToken, selectId } from "../features/auth/authSlice";
 
 import "./Navbar.less";
 
@@ -13,18 +13,19 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const token = useSelector(selectToken);
-
+  const id = useSelector(selectId);
   const handleLogout = async () => {
     await dispatch(logout());
     navigate("/");
+    window.location.reload();
   };
 
   return (
     <nav className="top">
-      <h1>Task Tracker</h1>
+      <h1>Fly-By</h1>
       <menu>
         <li>
-          <NavLink to="/">Home</NavLink>
+          <NavLink to={`/pilot/${id}`}>Home</NavLink>
         </li>
         {token ? (
           <li>
