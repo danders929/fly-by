@@ -25,7 +25,7 @@ export default function Navbar() {
       <h1>Fly-By</h1>
       <menu>
         <li>
-          <NavLink to={`/pilot/${id}`}>Home</NavLink>
+          <NavLink to={`/home`}>Home</NavLink>
         </li>
         {token ? (
           <li>
