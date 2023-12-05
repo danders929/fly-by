@@ -20,14 +20,12 @@ export default function PilotDetails(){
         <h1>Fly-By</h1>
         <h2>Account Details</h2>
       </header>
-      <body>
-        <section>
-          <p>First Name: {pilot.firstName}</p>
-          <p>Last Name {pilot.lastName}</p>
-          <p>Email Address: {pilot.email}</p>
-        </section>
-        <button>Edit</button>
-      </body>
+      <section>
+        <p>First Name: {pilot.firstName}</p>
+        <p>Last Name {pilot.lastName}</p>
+        <p>Email Address: {pilot.email}</p>
+      </section>
+      <button>Edit</button>
     </>
   )
 }
