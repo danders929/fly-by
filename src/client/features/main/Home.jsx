@@ -19,7 +19,7 @@ export default function Home() {
       </header>
       <section>
         <button onClick={() => handleNavClick("/new_log")}>New Flight</button>
-        <button onClick={() => handleNavClick(`/pilot/${id}/flight_log`)}>Flight Log</button>
+        <button onClick={() => handleNavClick(`/flight_log`)}>Flight Log</button>
         <button onClick={() => handleNavClick("/aircraft")}>Aircraft</button>
       </section>
     </>
