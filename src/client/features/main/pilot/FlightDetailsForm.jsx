@@ -123,6 +123,7 @@ export default function FlightDetailsForm() {
                 //code for handling update to field
               }} /> Solo
           </label>
+          <h3>Flight Hours</h3>
           <label>
             Engine Runtime: <input 
               type="number" 

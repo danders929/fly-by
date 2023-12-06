@@ -1,19 +1,20 @@
 import React from "react";
-// import react from "@vitejs/plugin-react-swc";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { selectId } from "../../auth/authSlice";
 
-const flight = { // Placeholder object for flight
-                name: null,
-                aircraft: {singleEngine: false},
-                solo: false,
-                picId: {name: null},
-                sicId: {name: null},
-                date: null,
-                departure: null,
-                arrival: null,
+const flight = {
+  // Placeholder object for flight
+  name: "null",
+  aircraft: { singleEngine: false },
+  solo: false,
+  picId: { name: "null" },
+  sicId: { name: "null" },
+  date: "null",
+  departure: "null",
+  arrival: "null",
+};
 
-               }; 
 function checkEngineType(){
   if(flight.aircraft.singleEngine){
     return "Single Engine"
@@ -23,13 +24,21 @@ function checkEngineType(){
 }
 
 export default function FlightDetails(){
-  const navigate = useNavigate;
-  const engineType = checkEngineType();
-  const engineRuntime = 0.0;
-  const totalFlightTime = 0.0;
-  const dayFlightHours = 0.0;
-  const nightFlightHours = 0.0;
+  const navigate = useNavigate();
+  const usrId = useSelector(selectId);
+  const { fltId } = useParams();
 
+
+  // placeholder data for flight data
+  const engineType = checkEngineType();
+  let engineRuntime = 0.0;
+  let totalFlightTime = 0.0;
+  let dayFlightHours = 0.0;
+  let nightFlightHours = 0.0;
+  
+  const handleNavClick = (navLink) => {
+    navigate(navLink);
+  }
   
   return (
     <>
@@ -41,7 +50,7 @@ export default function FlightDetails(){
         <h1>Fly-By</h1>
         <h2>Flight: {flight.name}</h2>
       </header>
-      <body>
+        <h3>Flight Details</h3>
         <section>
           <p>Pilot in Command: {flight.picId.name}</p>
           <p>Second in Command: {flight.sicId.name}</p>
@@ -51,14 +60,14 @@ export default function FlightDetails(){
           <p>Airport Departure: {flight.departure}</p>
           <p>Airport Arrival: {flight.arrival}</p>
         </section>
+        <h3>Flight Hours</h3>
         <section>
           <p>Engine Runtime: {engineRuntime}</p>
           <p>Total Flight Time: {totalFlightTime}</p>
           <p>Day Flight Hours: {dayFlightHours}</p>
           <p>Night Flight Hours: {nightFlightHours}</p>
         </section>
-        <button>Edit</button>
-      </body>
+        <button onClick={() => handleNavClick(`/pilot/${usrId}/flight_log/${fltId}/update`)}>Edit</button>
     </>
   )
 }
