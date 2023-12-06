@@ -40,7 +40,7 @@ const router = createBrowserRouter([
       { path: "/aircraft", element: <AircraftList />},
       { path: "/aircraft/:aircraftId", element: <AircraftDetails />},
       { path: "/aircraft/new_form", element: <AircraftNewForm />},
-      { path: "/aircraft/:id/update", element: <AircraftDetailsForm />}
+      { path: "/aircraft/:aircraftId/update", element: <AircraftDetailsForm />}
     ],
   },
 ]);
