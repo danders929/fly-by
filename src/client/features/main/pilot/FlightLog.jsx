@@ -1,7 +1,7 @@
 import React from "react";
-// import react from "@vitejs/plugin-react-swc";
-import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { selectId } from "../../auth/authSlice";
 
 export default function FlightLog(){
   const navigate = useNavigate;
@@ -12,7 +12,7 @@ export default function FlightLog(){
   const singleEngineHours = 0.0;
   const multiEngineHours = 0.0;
   const pilotName = ""; // Placeholder for getting pilot name
-  
+  const usrId = useSelector(selectId);
   return (
     <>
     <header>
@@ -37,11 +37,11 @@ export default function FlightLog(){
       </section>
       <ul>
         {/* TODO: for each flight in flight log create a list item with flight: {flight.name}
-                  update link to use {aircraft.id}
+                  update link to use {flight.id}
            */}
         <li>test list item. REPLACE ME with a for loop 
-          <span><Link to={`/aircraft/1`}>Details</Link></span>
-          </li>
+          <span><Link to={`/pilot/${usrId}/flight_log/1`}>Details</Link></span>
+        </li>
       </ul>
     </>
   )
