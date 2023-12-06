@@ -21,10 +21,7 @@ export default function AircraftDetailsForm(){
   return (
     <>
       <header>
-        <button>Home</button>
         <p>Image PlaceHolder</p>
-        <button>Profile</button>
-        <button>Logout</button>
         <h1>Fly-By</h1>
         <h2>Aircraft Details</h2>
       </header>

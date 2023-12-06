@@ -18,10 +18,7 @@ export default function PilotDetails(){
   return (
     <>
       <header>
-        <button>Home</button>
         <p>Image PlaceHolder</p>
-        <button>Profile</button>
-        <button>Logout</button>
         <h1>Fly-By</h1>
         <h2>Account Details</h2>
       </header>

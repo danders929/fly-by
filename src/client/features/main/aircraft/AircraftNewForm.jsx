@@ -12,10 +12,7 @@ export default function AircraftNewForm(){
   return (
     <>
       <header>
-        <button>Home</button>
         <p>Image PlaceHolder</p>
-        <button>Profile</button>
-        <button>Logout</button>
         <h1>Fly-By</h1>
         <h2>New Aircraft Form</h2>
       </header>
