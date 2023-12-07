@@ -41,7 +41,7 @@ export default function AuthForm() {
     try {
       await authMethod(credentials).unwrap();
       //TODO: Check if profile exists, if so navigate to home. Else, navigate to pilotUpdate
-      navigate(`/home`);
+      navigate(`/pilot/${id}/home`);
     } catch (err) {
       console.error(err);
     }

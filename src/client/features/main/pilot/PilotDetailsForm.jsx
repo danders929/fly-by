@@ -1,27 +1,22 @@
 import React from "react";
+// import react from "@vitejs/plugin-react-swc";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { selectId } from "../../auth/authSlice";
 
 export default function PilotDetailsForm(){
-  const navigate = useNavigate();
-  const id = useSelector(selectId)
-
-  const handleSubmit = () => {
-    event.preventDefault();
-    navigate(`/pilot/${id}`);
-  }
-
+  const navigate = useNavigate;
   return (
     <>
       <header>
+        <button>Home</button>
         <p>Image PlaceHolder</p>
+        <button>Profile</button>
+        <button>Logout</button>
         <h1>Fly-By</h1>
         <h2>Account Details</h2>
       </header>
-      <section>
-        <form onSubmit={handleSubmit}>
+      <body>
+        <form>
           <label>
             First Name
             <input
@@ -55,9 +50,9 @@ export default function PilotDetailsForm(){
               type="password">
             </input>
           </label>
-          <button type ="submit">Update</button>
+          <button>Update</button>
         </form>
-      </section>
+      </body>
     </>
   )
 }

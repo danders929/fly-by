@@ -1,5 +1,7 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+// import react from "@vitejs/plugin-react-swc";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const aircraft = {}; // Placeholder Object for aircraft
 
@@ -12,13 +14,8 @@ function checkEngineType(){
 }
 
 export default function AircraftDetails(){
-  const navigate = useNavigate();
-  const { aircraftId } = useParams();
+  const navigate = useNavigate;
   const engineType = checkEngineType();
-  const handleNavClick = (navLink) => {
-    navigate(navLink);
-  }
-
   return (
     <>
       <header>
@@ -29,13 +26,15 @@ export default function AircraftDetails(){
         <h1>Fly-By</h1>
         <h2>Aircraft Details</h2>
       </header>
+      <body>
         <section>
           <p>Tail Number: {aircraft.tailnumber}</p>
           <p>Make/Model: {aircraft.makeModel}</p>
           <p># of engines: {engineType}</p>
           <p>Hobbs Meter: {aircraft.hobbs}</p>
         </section>
-        <button onClick={() => handleNavClick(`/aircraft/${aircraftId}/update`)}>Edit</button>
+        <button>Edit</button>
+      </body>
     </>
   )
 }

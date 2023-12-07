@@ -1,63 +1,31 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+// import react from "@vitejs/plugin-react-swc";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const aircraft = { // Placeholder object for aircraft
-  tailNumber: "",
-  makeModel: "",
-  singleEngine: false,
-  hobbs: 0,
-};
-
+const aircraft = {}; // Placeholder object for aircraft
 
 export default function AircraftDetailsForm(){
-  const navigate = useNavigate();
-  const { aircraftId } = useParams();
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    navigate(`/aircraft/${aircraftId}`);
-  };
-
+  const navigate = useNavigate;
   return (
     <>
       <header>
+        <button>Home</button>
         <p>Image PlaceHolder</p>
+        <button>Profile</button>
+        <button>Logout</button>
         <h1>Fly-By</h1>
         <h2>Aircraft Details</h2>
       </header>
-        <form onSubmit={handleSubmit}>
-          <label>Tail Number: 
-            <input 
-              type="text" 
-              value={aircraft.tailNumber}
-              onChange={(e) => {
-                //code for handling update to field
-              }} />
-          </label>
-          <label>Make/Model: 
-            <input 
-              type="text" 
-              value={aircraft.makeModel}
-              onChange={(e) => {
-                //code for handling update to field
-              }} />
-          </label>
-          <label>Single Engine: 
-            <input 
-              type="checkbox" 
-              value={aircraft.singleEngine}
-              onChange={(e) => {
-                //code for handling update to field
-              }} /></label>
-          <label>Hobbs Meter: 
-            <input 
-              type="number" 
-              value={aircraft.hobbs}
-              onChange={(e) => {
-                //code for handling update to field
-              }} /></label>
-          <button type="submit">Update</button>
+      <body>
+        <form>
+          <label>Tail Number: <input type="text" value={aircraft.tailNumber} /></label>
+          <label>Make/Model: <input type="text" value={aircraft.makeModel} /></label>
+          <label>Single Engine: <input type="checkbox" value={aircraft.singleEngine} /></label>
+          <label>Hobbs Meter: <input type="number" value={aircraft.hobbs} /></label>
         </form>
+        <button>Update</button>
+      </body>
     </>
   )
 }

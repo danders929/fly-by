@@ -13,7 +13,7 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const token = useSelector(selectToken);
-  const usrId = useSelector(selectId);
+  const id = useSelector(selectId);
   const handleLogout = async () => {
     await dispatch(logout());
     navigate("/");
@@ -25,10 +25,7 @@ export default function Navbar() {
       <h1>Fly-By</h1>
       <menu>
         <li>
-          <NavLink to={`/home`}>Home</NavLink>
-        </li>
-        <li>
-          <NavLink to={`/pilot/${usrId}`}>Profile</NavLink>
+          <NavLink to={`/pilot/${id}`}>Home</NavLink>
         </li>
         {token ? (
           <li>
