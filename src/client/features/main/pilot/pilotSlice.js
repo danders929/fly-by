@@ -1,10 +1,13 @@
 import api from "../../../store/api";
-import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectId } from "../../auth/authSlice";
+
+const usrId = useSelector(selectId)
 
 const pilotApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getPilot: builder.query({
-      query: (id) => `/pilots/${id}`,
+      query: (id) => `/pilots/${usrId}`,
       providesTags: ["Pilot"],
     }),
 
