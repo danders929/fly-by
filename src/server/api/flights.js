@@ -44,10 +44,10 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const { solo, picId, sicId, aircraftId, date, departure, arrival, engineStartTime, } = req.body;
-    if (!picId || !tailNumber || !departure || !arrival) {
+    if (!picId || !aircraftId || !departure || !arrival) {
       const error = {
         status: 400,
-        message: "PIC, TailNumber, Departure, and Arrival fields are required.",
+        message: "PIC, aircraftId, Departure, and Arrival fields are required.",
       };
       return next(error);
     }
