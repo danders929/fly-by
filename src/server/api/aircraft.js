@@ -20,13 +20,13 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// /api/aircraft/:id - GET the details of aircraft specified by the id
-router.get("/:id", async (req, res, next) => {
+// /api/aircraft/:aircraftId - GET the details of aircraft specified by the id
+router.get("/:AircraftId", async (req, res, next) => {
   try {
-    const id = +req.params.id;
+    const aircraftId = +req.params.aircraftId;
     const result = await prisma.aircraft.findUnique({
       where: {
-        id: id,
+        id: aircraftId,
       },
       include: {
         flights: {
@@ -39,7 +39,7 @@ router.get("/:id", async (req, res, next) => {
     if (!result) {
       return next({
         status: 404,
-        message: `Could not find aircraft with id ${id}`,
+        message: `Could not find aircraft with id ${aircraftId}`,
       });
     }
     res.json(result);
@@ -74,14 +74,14 @@ router.post("/", async (req, res, next) => {
 });
 
 // /api/aircraft/:id - PATCH, updates a aircraft by id number
-router.patch("/:id", async (req, res, next) => {
+router.patch("/:aircraftId", async (req, res, next) => {
   try {
-    const id = +req.params.id;
+    const aircraftId = +req.params.aircraftId;
 
     const { makeModel, tailNum, singleEngine, hobbs } = req.body;
 
     const updateAircraft = await prisma.aircraft.update({
-      where: { id: id },
+      where: { id: aircraftId },
       data: {
         makeModel: makeModel,
         tailNum: tailNum,
@@ -96,23 +96,25 @@ router.patch("/:id", async (req, res, next) => {
   }
 });
 
+// Currently not in use. May implement later.
+//
 // /api/aircraft/:id - DELETE, deletes a aircraft by id number
-router.delete("/:id", async (req, res, next) => {
-  try {
-    const id = +req.params.id;
-    const result = await prisma.aircraft.delete({
-      where: {
-        id: id,
-      },
-    });
-    if (!result) {
-      return next({
-        status: 404,
-        message: `Could not find aircraft with id ${id}`,
-      });
-    }
-    res.json(result);
-  } catch (err) {
-    next(err);
-  }
-});
+// router.delete("/:id", async (req, res, next) => {
+//   try {
+//     const id = +req.params.id;
+//     const result = await prisma.aircraft.delete({
+//       where: {
+//         id: id,
+//       },
+//     });
+//     if (!result) {
+//       return next({
+//         status: 404,
+//         message: `Could not find aircraft with id ${id}`,
+//       });
+//     }
+//     res.json(result);
+//   } catch (err) {
+//     next(err);
+//   }
+// });

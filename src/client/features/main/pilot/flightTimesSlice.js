@@ -6,35 +6,35 @@ const usrId = useSelector(selectId)
 
 const flightTimesApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getflight: builder.query({
+    getflightTime: builder.query({
       query: () => ({
-        url: `/flights/`,
+        url: `/flightTimes/`,
         params: { picId: usrId }
       }),
-      providesTags: ["Flight"],
+      providesTags: ["FlightTime"],
     }),
 
-    createflight: builder.mutation({
-      query: (flightData) => ({
-        url: `/flights/`,
+    createflightTime: builder.mutation({
+      query: (flightTimeData) => ({
+        url: `/flightTimes/`,
         method: "POST",
-        body: flightData,
+        body: flightTimeData,
       }),
     }),
 
-    updateFlight: builder.mutation({
-      query: (flightData) => ({
-        url: `/flights/${flightData.id}`,
+    updateFlightTime: builder.mutation({
+      query: (flightTimeData) => ({
+        url: `/flightTimes/${flightTimeData.id}`,
         method: "PATCH",
-        body: flightData,
+        body: flightTimeData,
       }),
-      invalidatesTags: ["Flight"],
+      invalidatesTags: ["FlightTime"],
     }),
   }),
 });
 
 export const {
-  useGetFlightQuery,
-  useCreateFlight,
-  useUpdateFlight,
+  useGetFlightTimesQuery,
+  useCreateFlightTimes,
+  useUpdateFlightTimes,
 } = flightTimesApi;
