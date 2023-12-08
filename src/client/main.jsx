@@ -29,18 +29,18 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <AuthForm /> },
       { path: "/authForm", element: <AuthForm /> },
-      { path: "/pilot/:id", element: <PilotDetails />},
-      { path: "/pilot/:id/update", element: <PilotDetailsForm />},
-      { path: "/pilot/:id/home", element: <Home />},
-      { path: "/pilot/:id/new_log", element: <NewLog />},
-      { path: "/pilot/:id/flight/:flt_id", element: <Flight />},
-      { path: "/pilot/:id/flight_log", element: <FlightLog />},
-      { path: "/pilot/:id/flight_log/:flt_id", element: <FlightDetails />},
-      { path: "/pilot/:id/flight_log/:flt_id/update", element: <FlightDetailsForm />},
+      { path: "/pilot/:usrId", element: <PilotDetails />},
+      { path: "/pilot/:usrId/update", element: <PilotDetailsForm />},
+      { path: "/home", element: <Home />},
+      { path: "/new_log", element: <NewLog />},
+      { path: "/flight/:fltId", element: <Flight />},
+      { path: "/flight_log", element: <FlightLog />},
+      { path: "/pilot/:usrId/flight_log/:fltId", element: <FlightDetails />},
+      { path: "/pilot/:usrId/flight_log/:fltId/update", element: <FlightDetailsForm />},
       { path: "/aircraft", element: <AircraftList />},
-      { path: "/aircraft/:id", element: <AircraftDetails />},
+      { path: "/aircraft/:aircraftId", element: <AircraftDetails />},
       { path: "/aircraft/new_form", element: <AircraftNewForm />},
-      { path: "/aircraft/:id/update", element: <AircraftDetailsForm />}
+      { path: "/aircraft/:aircraftId/update", element: <AircraftDetailsForm />}
     ],
   },
 ]);
