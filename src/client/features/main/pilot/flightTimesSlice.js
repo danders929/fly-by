@@ -4,7 +4,7 @@ import { selectId } from "../../auth/authSlice";
 
 const usrId = useSelector(selectId)
 
-const flightApi = api.injectEndpoints({
+const flightTimesApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getflight: builder.query({
       query: () => ({
@@ -37,4 +37,4 @@ export const {
   useGetFlightQuery,
   useCreateFlight,
   useUpdateFlight,
-} = flightApi;
+} = flightTimesApi;
