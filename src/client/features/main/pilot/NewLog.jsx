@@ -1,22 +1,27 @@
 import React from "react";
-// import react from "@vitejs/plugin-react-swc";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { selectId } from "../../auth/authSlice"; //this needs to be changed to selectFlightId
 
-export default function NewLog(){
-  const navigate = useNavigate;
+export default function PilotDetailsForm(){
+  const navigate = useNavigate();
+  const id = useSelector(selectId) //this needs to be changed to selectFlightId
+
+  const handleSubmit = () => {
+    event.preventDefault();
+    navigate(`/flight/${id}`);
+  }
+
   return (
     <>
       <header>
-        <button>Home</button>
         <p>Image PlaceHolder</p>
-        <button>Profile</button>
-        <button>Logout</button>
         <h1>Fly-By</h1>
         <h2>New Flight Log</h2>
       </header>
-      <body>
-        <form>
+      <section>
+        <form onSubmit={handleSubmit}>
           <label>
             <input 
               type="checkbox"
@@ -68,9 +73,9 @@ export default function NewLog(){
             </input>
             Night
           </label>
-          <button>Engine Start</button>
+          <button type ="submit">Engine Start</button>
         </form>
-      </body>
+      </section>
     </>
   )
 }
