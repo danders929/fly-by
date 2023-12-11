@@ -41,7 +41,7 @@ export const {
 } = flightLogApi;
 
 // Session storage key for Flight Id
-const FLIGHT_ID = 0;
+const FLIGHT_ID = "flightId";
 const ENG_START = "engineStartTime";
 const ENG_STOP = "engineStopTime";
 
@@ -114,4 +114,4 @@ export const selectFlightId = (state) => state.flight.id;
 export const selectEngineStartTime = (state) => state.flight.engineStartTime;
 export const selectEngineStopTime = (state) => state.flight.engineStopTime;
 
-export default authSlice.reducer;
+export default flightLogSlice.reducer;
