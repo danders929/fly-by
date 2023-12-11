@@ -1,9 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import api from "../../../store/api";
-import { useSelector } from "react-redux";
-import { selectId } from "../../auth/authSlice";
-
-const usrId = useSelector(selectId)
 
 const flightLogApi = api.injectEndpoints({
   endpoints: (builder) => ({
