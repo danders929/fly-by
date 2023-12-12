@@ -59,6 +59,10 @@ const flightLogSlice = createSlice({
     flights: [], 
   },
   reducers: {
+    resetFlightLog: (state) => {
+      // Reset your flight log state properties
+      state.flights = [];
+    },
     updateFlightData: (
       state,
       { payload: { flightId, solo, picId, sicId, aircraftId, engineStartTime, departure, arrival, engineStopTime } }
@@ -104,7 +108,7 @@ const flightLogSlice = createSlice({
   },
 });
 
-export const { updateFlightData } = flightLogSlice.actions;
+export const { updateFlightData, resetFlightLog } = flightLogSlice.actions;
 
 export const selectFlightId = (state) => state.flight.id;
 export const selectEngineStartTime = (state) => state.flight.engineStartTime;
