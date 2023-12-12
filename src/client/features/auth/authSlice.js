@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import api from "../../store/api";
+import resetPilot from "../main/pilot/pilotSlice";
+import { resetFlightLog } from "../main/pilot/flightLogSlice";
 
 /** Authentication endpoints */
 const authApi = api.injectEndpoints({
@@ -52,6 +54,11 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // Additional reducers that reset the state when logging out
+    builder.addCase(logout, (state) => {
+      resetPilot(state);
+      resetFlightLog(state);
+    });
     // Store token when register or login succeeds
     builder.addMatcher(api.endpoints.register.matchFulfilled, storeToken);
     builder.addMatcher(api.endpoints.login.matchFulfilled, storeToken);

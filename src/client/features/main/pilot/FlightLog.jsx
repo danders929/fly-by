@@ -1,45 +1,109 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { selectId } from "../../auth/authSlice";
+import { useGetFlightQuery } from "./flightLogSlice"; 
+import { selectFirstName, useGetPilotQuery } from "./pilotSlice";
 
-export default function FlightLog(){
-  const navigate = useNavigate;
-  const totalFlightHours = 0.0;
-  const totalDayFlightHours = 0.0;
-  const totalNightFlightHours = 0.0;
-  const totalSoloFlightHours = 0.0;
-  const singleEngineHours = 0.0;
-  const multiEngineHours = 0.0;
-  const pilotName = ""; // Placeholder for getting pilot name
+const FlightLog = () => {
   const usrId = useSelector(selectId);
+  // queries the api for flights
+  const { data: flights, error, isLoading } = useGetFlightQuery(usrId);
+
+  // queries the api for pilot's first name and assigns it to pilotName
+  const { data: pilotData } = useGetPilotQuery(usrId);
+  
+  useEffect(() => {    
+    if (error) {
+      console.error("Error fetching flight data:", error);
+    }
+  }, [error]);
+
+  // Calculate total flight hours
+  const calculateTotalFlightHours = () => {
+    let totalHours = 0;
+    let totalSoloHours = 0;
+    let totalDayHours = 0;
+    let totalNightHours = 0;
+
+    if (flights) {
+      flights.forEach((flight) => {
+        if (flight.FlightTimes && flight.FlightTimes.length > 0) {
+          flight.FlightTimes.forEach((time) => {
+            const startTime = new Date(time.timeStart);
+            const stopTime = time.timeStop ? new Date(time.timeStop) : new Date(); // Use current time if timeStop is not available
+            const duration = stopTime - startTime;
+            const hours = duration / (1000 * 60 * 60); 
+            const dayFlight = time.dayFlight;
+            totalHours += hours;
+
+            // Check if it's a solo flight and add hours to totalSoloHours
+            if (flight.solo) {
+              totalSoloHours += hours;
+            }
+            // Check if it's a day flight or night and add hours corespondingly
+            if (dayFlight) {
+              totalDayHours += hours;
+            } else {
+              totalNightHours += hours;
+            }
+          });
+        }
+      });
+    }
+
+    return { total: totalHours.toFixed(2), day: totalDayHours.toFixed(2), night: totalNightHours.toFixed(2), solo: totalSoloHours.toFixed(2) }; // Round to two decimal places
+  };
+  
+  // Formats the flight.date value to be MM:DD:YY
+  const formatFlightDate = (flight) => {
+    // Get date components
+    const flightDate = new Date(flight.date);
+    const month = String(flightDate.getMonth() + 1).padStart(2, "0");
+    const day = String(flightDate.getDate()).padStart(2, "0");
+    const year = String(flightDate.getFullYear()).slice(2);
+
+    // Create the formatted date string (MM/DD/YY)
+    const formattedDate = `${month}/${day}/${year}`;
+
+    // Create the formatted date string with flight number (MM/DD/YY:N)
+    const formattedWithNumber = `${formattedDate}`;
+  
+    return formattedWithNumber;
+  };
+  const pilotName = useSelector(selectFirstName);
+  const totalFlightHours = calculateTotalFlightHours();
   return (
     <>
-    <header>
-      <p>Image PlaceHolder</p>
-      <h1>Fly-By</h1>
-      <h2>{pilotName}'s Flight Log</h2>
-    </header>
+      <header>
+        <p>Image PlaceHolder</p>
+        <h1>Fly-By</h1>
+        <h2>{pilotData ? `${pilotData.firstName}'s Flight Log` : "Loading..."}</h2>
+      </header>
       <section>
         <h2>Flight Hours</h2>
-        <p>Total Flight: {totalFlightHours}hrs</p>
-        <p>Day Flight: {totalDayFlightHours}hrs</p>
-        <p>Night Flight: {totalNightFlightHours}hrs</p>
-        <p>Solo Flight: {totalSoloFlightHours}hrs</p>
+        <p>Total Flight: {totalFlightHours.total}hrs</p>
+        <p>Day Flight: {totalFlightHours.day}hrs</p>
+        <p>Night Flight: {totalFlightHours.night}hrs</p>
+        <p>Solo Flight: {totalFlightHours.solo}hrs</p>
       </section>
+      <br />
       <section>
-        <h2>Engine Type Hours</h2>
-        <p>Single Engine: {singleEngineHours}hrs</p>
-        <p>Multi-Engine Flight: {multiEngineHours}hrs</p>
+        <ul>
+          {isLoading && <div>Loading...</div>}
+          {!isLoading && (!flights || flights.length === 0) && <div>No flights found</div>}
+          {!isLoading && flights && flights.map((flight) => (
+              <li key={flight.id}>
+                {formatFlightDate(flight)}
+                <span>
+                  <Link to={`/pilot/${usrId}/flight_log/${flight.id}`}>Details</Link>
+                </span>
+              </li>
+            ))}
+        </ul>
       </section>
-      <ul>
-        {/* TODO: for each flight in flight log create a list item with flight: {flight.name}
-                  update link to use {flight.id}
-           */}
-        <li>test list item. REPLACE ME with a for loop 
-          <span><Link to={`/pilot/${usrId}/flight_log/1`}>Details</Link></span>
-        </li>
-      </ul>
     </>
-  )
-}
+  );
+};
+
+export default FlightLog;
