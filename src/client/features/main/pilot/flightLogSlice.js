@@ -6,7 +6,7 @@ export const flightLogApi = api.injectEndpoints({
     getflight: builder.query({
       query: (usrId) => ({
         url: `/flights/?usrId=${usrId}`,
-        params: { where: { OR: [{ picId: usrId }, { sicId: usrId }] } },
+        // params: { where: { OR: [{ picId: usrId }, { sicId: usrId }] } },
       }),
       providesTags: ["Flight"],
     }),
