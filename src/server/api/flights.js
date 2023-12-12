@@ -5,11 +5,30 @@ module.exports = router;
 // /api/flights - GET all flights
 router.get("/", async (req, res, next) => {
   try {
-    const flights = await prisma.flight.findMany({
-      include: {
-        FlightTimes: true,
-      }
-    });
+    const usrId = parseInt(req.query.usrId);
+
+    let flights;
+    if (usrId) {
+      flights = await prisma.flight.findMany({
+        where: {
+          OR: [
+            { picId: usrId },
+            { sicId: usrId },
+          ],
+        },
+        include: {
+          FlightTimes: true,
+        },
+      });
+    } else {
+      // If usrId is not provided, fetch all flights
+      flights = await prisma.flight.findMany({
+        include: {
+          FlightTimes: true,
+        },
+      });
+    }
+
     res.json(flights);
   } catch (err) {
     next(err);

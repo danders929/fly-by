@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { selectId } from "../../auth/authSlice";
 
 export default function FlightLog(){
-  const navigate = useNavigate;
+  const navigate = useNavigate();
   const totalFlightHours = 0.0;
   const totalDayFlightHours = 0.0;
   const totalNightFlightHours = 0.0;
