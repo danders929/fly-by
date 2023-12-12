@@ -5,16 +5,9 @@ import { selectId } from "../../auth/authSlice";
 import { useGetFlightQuery } from "./flightLogSlice"; // Import the useGetFlightQuery hook
 
 const FlightLog = () => {
-  const totalFlightHours = 0.0;
-  const totalDayFlightHours = 0.0;
-  const totalNightFlightHours = 0.0;
-  const totalSoloFlightHours = 0.0;
-  const singleEngineHours = 0.0;
-  const multiEngineHours = 0.0;
   const pilotName = ""; // Placeholder for getting pilot name
   const usrId = useSelector(selectId);
-
-  // Use the generated useGetFlightQuery hook
+  // queries the database
   const { data: flights, error, isLoading } = useGetFlightQuery(usrId);
 
   useEffect(() => {
@@ -22,7 +15,44 @@ const FlightLog = () => {
       console.error("Error fetching flight data:", error);
     }
   }, [error]);
-  
+
+  // Calculate total flight hours
+  const calculateTotalFlightHours = () => {
+    let totalHours = 0;
+    let totalSoloHours = 0;
+    let totalDayHours = 0;
+    let totalNightHours = 0;
+
+
+    if (flights) {
+      flights.forEach((flight) => {
+        if (flight.FlightTimes && flight.FlightTimes.length > 0) {
+          flight.FlightTimes.forEach((time) => {
+            const startTime = new Date(time.timeStart);
+            const stopTime = time.timeStop ? new Date(time.timeStop) : new Date(); // Use current time if timeStop is not available
+            const duration = stopTime - startTime;
+            const hours = duration / (1000 * 60 * 60); 
+            const dayFlight = time.dayFlight;
+            totalHours += hours;
+
+            // Check if it's a solo flight and add hours to totalSoloHours
+            if (flight.solo) {
+              totalSoloHours += hours;
+            }
+            // Check if it's a day flight or night and add hours corespondingly
+            if (dayFlight) {
+              totalDayHours += hours;
+            } else {
+              totalNightHours += hours;
+            }
+          });
+        }
+      });
+    }
+
+    return { total: totalHours.toFixed(2), day: totalDayHours.toFixed(2), night: totalNightHours.toFixed(2), solo: totalSoloHours.toFixed(2) }; // Round to two decimal places
+  };
+
   // Formats the flight.date value to be MM:DD:YY
   const formatFlightDate = (flight) => {
     // Get date components
@@ -40,6 +70,7 @@ const FlightLog = () => {
     return formattedWithNumber;
   };
 
+  const totalFlightHours = calculateTotalFlightHours();
   return (
     <>
       <header>
@@ -49,30 +80,28 @@ const FlightLog = () => {
       </header>
       <section>
         <h2>Flight Hours</h2>
-        <p>Total Flight: {totalFlightHours}hrs</p>
-        <p>Day Flight: {totalDayFlightHours}hrs</p>
-        <p>Night Flight: {totalNightFlightHours}hrs</p>
-        <p>Solo Flight: {totalSoloFlightHours}hrs</p>
+        <p>Total Flight: {totalFlightHours.total}hrs</p>
+        <p>Day Flight: {totalFlightHours.day}hrs</p>
+        <p>Night Flight: {totalFlightHours.night}hrs</p>
+        <p>Solo Flight: {totalFlightHours.solo}hrs</p>
       </section>
+      <br />
       <section>
-        <h2>Engine Type Hours</h2>
-        <p>Single Engine: {singleEngineHours}hrs</p>
-        <p>Multi-Engine Flight: {multiEngineHours}hrs</p>
+        <ul>
+          {isLoading && <div>Loading...</div>}
+          {!isLoading && (!flights || flights.length === 0) && <div>No flights found</div>}
+          {!isLoading &&
+            flights &&
+            flights.map((flight) => (
+              <li key={flight.id}>
+                {formatFlightDate(flight)}
+                <span>
+                  <Link to={`/pilot/${usrId}/flight_log/${flight.id}`}>Details</Link>
+                </span>
+              </li>
+            ))}
+        </ul>
       </section>
-      <ul>
-        {isLoading && <div>Loading...</div>}
-        {!isLoading && (!flights || flights.length === 0) && <div>No flights found</div>}
-        {!isLoading &&
-          flights &&
-          flights.map((flight) => (
-            <li key={flight.id}>
-              {formatFlightDate(flight)}
-              <span>
-                <Link to={`/pilot/${usrId}/flight_log/${flight.id}`}>Details</Link>
-              </span>
-            </li>
-          ))}
-      </ul>
     </>
   );
 };
