@@ -5,7 +5,7 @@ export const flightLogApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getflight: builder.query({
       query: (usrId) => ({
-        url: `/flights/`,
+        url: `/flights/?usrId=${usrId}`,
         params: { where: { OR: [{ picId: usrId }, { sicId: usrId }] } },
       }),
       providesTags: ["Flight"],
@@ -56,7 +56,7 @@ const flightLogSlice = createSlice({
   initialState: {
     id: sessionStorage.getItem(FLIGHT_ID),
     engineStartTime: sessionStorage.getItem(ENG_START),
-    flights: [], // New array to store flights
+    flights: [], 
   },
   reducers: {
     updateFlightData: (
