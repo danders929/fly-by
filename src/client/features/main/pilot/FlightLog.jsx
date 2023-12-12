@@ -71,7 +71,7 @@ const FlightLog = () => {
   
     return formattedWithNumber;
   };
-  const pilotName = useSelector(selectFirstName);
+  
   const totalFlightHours = calculateTotalFlightHours();
   return (
     <>
