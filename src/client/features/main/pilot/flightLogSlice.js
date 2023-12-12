@@ -80,10 +80,10 @@ const flightLogSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    
     builder.addMatcher(
       flightLogApi.endpoints.getflight.matchFulfilled,
       (state, action) => {
-        // Store the fetched flights in the state
         state.flights = action.payload;
       }
     );

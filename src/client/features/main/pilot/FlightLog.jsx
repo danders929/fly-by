@@ -30,12 +30,12 @@ const FlightLog = () => {
     const month = String(flightDate.getMonth() + 1).padStart(2, "0");
     const day = String(flightDate.getDate()).padStart(2, "0");
     const year = String(flightDate.getFullYear()).slice(2);
-  
+
     // Create the formatted date string (MM/DD/YY)
     const formattedDate = `${month}/${day}/${year}`;
-  
+
     // Create the formatted date string with flight number (MM/DD/YY:N)
-    const formattedWithNumber = `${formattedDate}:${flight.number}`;
+    const formattedWithNumber = `${formattedDate}`;
   
     return formattedWithNumber;
   };
@@ -66,7 +66,7 @@ const FlightLog = () => {
           flights &&
           flights.map((flight) => (
             <li key={flight.id}>
-              {formatFlightDate(flight, flights)}
+              {formatFlightDate(flight)}
               <span>
                 <Link to={`/pilot/${usrId}/flight_log/${flight.id}`}>Details</Link>
               </span>
