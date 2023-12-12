@@ -90,9 +90,7 @@ const FlightLog = () => {
         <ul>
           {isLoading && <div>Loading...</div>}
           {!isLoading && (!flights || flights.length === 0) && <div>No flights found</div>}
-          {!isLoading &&
-            flights &&
-            flights.map((flight) => (
+          {!isLoading && flights && flights.map((flight) => (
               <li key={flight.id}>
                 {formatFlightDate(flight)}
                 <span>
