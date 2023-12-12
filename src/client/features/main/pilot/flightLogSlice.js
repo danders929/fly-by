@@ -1,16 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import api from "../../../store/api";
 
-const flightLogApi = api.injectEndpoints({
+export const flightLogApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getflight: builder.query({
-      query: () => ({
+      query: (usrId) => ({
         url: `/flights/`,
-        params: { where: { OR: [{ picId: usrId }, { sicId: usrId }] } }
+        params: { where: { OR: [{ picId: usrId }, { sicId: usrId }] } },
       }),
       providesTags: ["Flight"],
     }),
-
     createflight: builder.mutation({
       query: (flightData) => ({
         url: `/flights/`,
@@ -18,7 +17,6 @@ const flightLogApi = api.injectEndpoints({
         body: flightData,
       }),
     }),
-
     updateFlight: builder.mutation({
       query: (flightData) => ({
         url: `/flights/${flightData.id}`,
@@ -30,47 +28,43 @@ const flightLogApi = api.injectEndpoints({
   }),
 });
 
-export const {
-  useGetFlightQuery,
-  useCreateFlight,
-  useUpdateFlight,
-} = flightLogApi;
+export const useGetFlightQuery = flightLogApi.endpoints.getflight.useQuery;
+export const useCreateFlight = flightLogApi.endpoints.createflight.useMutation;
+export const useUpdateFlight = flightLogApi.endpoints.updateFlight.useMutation;
 
-// Session storage key for Flight Id
 const FLIGHT_ID = "flightId";
 const ENG_START = "engineStartTime";
 const ENG_STOP = "engineStopTime";
 
-// reducer that stores the payload's id in state and session storage
 const storeFlightId = (state, { payload }) => {
   state.flightId = payload.id;
   sessionStorage.setItem(FLIGHT_ID, payload.id);
-}
+};
 
-// reducer that stores the payload's start time in state
-const storeEngineStart = (state, {payload}) => {
+const storeEngineStart = (state, { payload }) => {
   state.engineStartTime = payload.engineStartTime;
   sessionStorage.setItem(ENG_START, payload.engineStartTime);
-}
+};
 
-// reducer that stores the payload's stop time in state
-const storeEngineStop = (state, {payload}) => {
+const storeEngineStop = (state, { payload }) => {
   state.engineStopTime = payload.engineStopTime;
   sessionStorage.setItem(ENG_STOP, payload.engineStopTime);
-}
+};
 
-// keeps track of Flight data from API
 const flightLogSlice = createSlice({
   name: "flight",
   initialState: {
     id: sessionStorage.getItem(FLIGHT_ID),
     engineStartTime: sessionStorage.getItem(ENG_START),
+    flights: [], // New array to store flights
   },
   reducers: {
-    // Updates the payload data
-    updateFlightData: (flightId, solo, picId, sicId, aircraftId, engineStartTime, departure, arrival, engineStopTime) => {
+    updateFlightData: (
+      state,
+      { payload: { flightId, solo, picId, sicId, aircraftId, engineStartTime, departure, arrival, engineStopTime } }
+    ) => {
       return {
-        type: 'updateFlightData',
+        type: "updateFlightData",
         payload: {
           flightId,
           solo,
@@ -80,27 +74,41 @@ const flightLogSlice = createSlice({
           engineStartTime,
           departure,
           arrival,
-          engineStopTime
-        }
-      }
+          engineStopTime,
+        },
+      };
     },
   },
   extraReducers: (builder) => {
-    // Store flight data when querying a flight
-    builder.addMatcher(api.endpoints.getflight.matchFulfilled, storeFlightId, storeEngineStart, storeEngineStop)
-    
-    // Store Flight data when creating a flight
-    builder.addMatcher(api.endpoints.createflight.matchFulfilled, storeFlightId, storeEngineStart, storeEngineStop)
+    builder.addMatcher(
+      flightLogApi.endpoints.getflight.matchFulfilled,
+      (state, action) => {
+        // Store the fetched flights in the state
+        state.flights = action.payload;
+      }
+    );
 
-    // Updates state when updating flight data
-    builder.addMatcher(api.endpoints.updateFlight.matchFulfilled, storeFlightId, storeEngineStart, storeEngineStop)
-  }
-})
+    builder.addMatcher(
+      flightLogApi.endpoints.createflight.matchFulfilled,
+      storeFlightId,
+      storeEngineStart,
+      storeEngineStop
+    );
 
-export const { convertTimeStampToDate, updateFlightData } = flightLogSlice.actions;
+    builder.addMatcher(
+      flightLogApi.endpoints.updateFlight.matchFulfilled,
+      storeFlightId,
+      storeEngineStart,
+      storeEngineStop
+    );
+  },
+});
+
+export const { updateFlightData } = flightLogSlice.actions;
 
 export const selectFlightId = (state) => state.flight.id;
 export const selectEngineStartTime = (state) => state.flight.engineStartTime;
 export const selectEngineStopTime = (state) => state.flight.engineStopTime;
+export const selectFlights = (state) => state.flight.flights;
 
 export default flightLogSlice.reducer;
