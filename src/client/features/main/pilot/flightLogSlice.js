@@ -65,15 +65,8 @@ const flightLogSlice = createSlice({
   initialState: {
     id: sessionStorage.getItem(FLIGHT_ID),
     engineStartTime: sessionStorage.getItem(ENG_START),
-    engineStopTime: sessionStorage.getItem(ENG_STOP),
   },
   reducers: {
-    // takes engine start/stop time and converts ISO8601 string to date() object
-    convertTimeStampToDate: (state) => {
-      state.engineStartTime = new Date(state.engineStartTime);
-      state.engineStopTime = new Date(state.engineStopTime);
-    },
-
     // Updates the payload data
     updateFlightData: (flightId, solo, picId, sicId, aircraftId, engineStartTime, departure, arrival, engineStopTime) => {
       return {
