@@ -15,7 +15,7 @@ export default function Flight(){
   const flight = {}; //placeholder object for getting flight details
 
   const handleStopClick = (navLink) => {
-    //TODO: add code to patch flight table.
+    //TODO: add code to patch flight table, and add total flight hours to aircraft.
     navigate(navLink);
   }
   return (
