@@ -37,9 +37,13 @@ const pilotSlice = createSlice({
   name: "pilot",
   initialState: {
     firstName: "",
+    lastName: "",
   },
   reducers: {
     setFirstName: (state, action) => {
+      state.firstName = action.payload;
+    },
+    setLastName: (state, action) => {
       state.firstName = action.payload;
     },
     resetPilot: (state) => {
@@ -49,12 +53,13 @@ const pilotSlice = createSlice({
   extraReducers: (builder) => {
     builder.addMatcher(pilotApi.endpoints.getPilot.matchFulfilled, (state, action) => {
       state.firstName = action.payload.firstName;
-      // Update other properties if needed
+      state.lastName = action.payload.lastName;
     });
   },
 });
 
-export const { setFirstName } = pilotSlice.actions;
+export const { setFirstName, setLastName } = pilotSlice.actions;
 export const selectFirstName = (state) => state.pilot.firstName;
+export const selectLastName = (state) => state.pilot.lastName;
 
 export default pilotSlice.reducer;
