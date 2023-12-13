@@ -3,6 +3,12 @@ import api from "../../../store/api";
 
 export const flightLogApi = api.injectEndpoints({
   endpoints: (builder) => ({
+    getFlightById: builder.query({
+      query: (fltId) => ({
+        url: `/flights/${fltId}`,
+      }),
+      providesTags: ["Flight"],
+    }),
     getflight: builder.query({
       query: (usrId) => ({
         url: `/flights/?usrId=${usrId}`,
@@ -27,7 +33,7 @@ export const flightLogApi = api.injectEndpoints({
     }),
   }),
 });
-
+export const useGetFlightQueryById = flightLogApi.endpoints.getFlightById.useQuery;
 export const useGetFlightQuery = flightLogApi.endpoints.getflight.useQuery;
 export const useCreateFlight = flightLogApi.endpoints.createflight.useMutation;
 export const useUpdateFlight = flightLogApi.endpoints.updateFlight.useMutation;
@@ -56,7 +62,7 @@ const flightLogSlice = createSlice({
   initialState: {
     id: sessionStorage.getItem(FLIGHT_ID),
     engineStartTime: sessionStorage.getItem(ENG_START),
-    flights: [], 
+    flights: [],
   },
   reducers: {
     resetFlightLog: (state) => {
@@ -84,6 +90,12 @@ const flightLogSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addMatcher(
+      flightLogApi.endpoints.getFlightById.matchFulfilled,
+      (state, action) => {
+        state.flights = action.payload;
+      }
+    );
     
     builder.addMatcher(
       flightLogApi.endpoints.getflight.matchFulfilled,
