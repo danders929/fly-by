@@ -22,7 +22,6 @@ export default function Navbar() {
 
   return (
     <nav className="top">
-      <h1>Fly-By</h1>
       <menu>
         <li>
           <NavLink to={`/home`}>Home</NavLink>
