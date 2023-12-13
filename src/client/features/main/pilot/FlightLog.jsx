@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { selectId } from "../../auth/authSlice";
 import { useGetFlightQuery } from "./flightLogSlice"; 
-import { selectFirstName, useGetPilotQuery } from "./pilotSlice";
+import { useGetPilotQuery } from "./pilotSlice";
 
 const FlightLog = () => {
   const usrId = useSelector(selectId);

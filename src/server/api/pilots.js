@@ -26,6 +26,7 @@ router.get("/:id", async (req, res, next) => {
       },
       include: {
         flights: true,
+        user: true,
       },
     });
     if (!result) {
