@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { selectId } from "../../auth/authSlice";
+import "./Flight.less";
 
 export default function Flight(){
   const navigate = useNavigate();
@@ -25,19 +26,37 @@ export default function Flight(){
         <h1>Fly-By</h1>
         <h2>Flight: {flight.name}</h2>
       </header>
-      <section>
+      <section className="button-container">
         <button>Day</button>
         <button>Night</button>
         <button>Wheels Up</button>
         <button>Wheels Down</button>
       </section>
-      <section>
-          <p>Engine Runtime: {engRuntime}hrs</p>
-          <p>Total Flight Time: {totalFlightTime}hrs</p>
-          <p>Day Flight Hours: {dayFlightTime}hrs</p>
-          <p>Night Flight Hours: {nightFlightTime}hrs</p>
+      <section className="flight-data">
+        <table>
+          <tbody>
+            <tr>
+              <td>Engine Runtime</td>
+              <td>{engRuntime}hrs</td>
+            </tr>
+            <tr>
+              <td>Total Flight Time</td>
+              <td>{totalFlightTime}hrs</td>
+            </tr>
+            <tr>
+              <td>Day Flight Hours</td>
+              <td>{dayFlightTime}hrs</td>
+            </tr>
+            <tr>
+              <td>Night Flight Hours</td>
+              <td>{nightFlightTime}hrs</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
-      <button onClick={() => handleStopClick(`/pilot/${usrId}/flight_log/${fltId}`)}>Engine Stop</button>
+      <section className="button-container">
+        <button onClick={() => handleStopClick(`/pilot/${usrId}/flight_log/${fltId}`)}>Engine Stop</button>
+      </section>
     </>
-  )
+  );
 }
