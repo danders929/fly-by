@@ -3,6 +3,13 @@ import api from "../../../store/api";
 
 const aircraftApi = api.injectEndpoints({
   endpoints: (builder) => ({
+    getAircraftById: builder.query({
+      query: (aircraftId) => ({
+        url: `/aircraft/${aircraftId}`
+      }),
+      providesTags: ["Aircraft"],
+    }),
+
     getAircraft: builder.query({
       query: () => ({
         url: `/aircraft/`
@@ -30,6 +37,7 @@ const aircraftApi = api.injectEndpoints({
 });
 
 export const {
+  useGetAircraftByIdQuery,
   useGetAircraftQuery,
   useCreateAircraft,
   useUpdateAircraft,
@@ -41,6 +49,9 @@ const aircraftSlice = createSlice({
     id: "",
     makeModel: "",
     tailNum: "",
+    singleEngine: null,
+    hobbs: 0,
+
   },
   reducers: {
     setId: (state, action) => {
@@ -52,10 +63,18 @@ const aircraftSlice = createSlice({
     setTailnum: (state, action) => {
       state.tailNum = action.payload;
     },
+    setSingleEngine: (state, action) => {
+      state.singleEngine = action.payload;
+    },
+    setHobbs: (state, action) => {
+      state.hobbs = action.payload;
+    },
     resetAircraft: (state) => {
       state.id = "";
       state.makeModel = "";
       state.tailNum = "";
+      state.singleEngine = null;
+      state.hobbs = null;
     },
   },
   extraReducers: (builder) => {
@@ -63,6 +82,13 @@ const aircraftSlice = createSlice({
       state.id = action.payload.id
       state.makeModel = action.payload.makeModel;
       state.tailNum = action.payload.tailNum;
+    });
+    builder.addMatcher(aircraftApi.endpoints.getAircraftById.matchFulfilled, (state, action) => {
+      state.id = action.payload.id
+      state.makeModel = action.payload.makeModel;
+      state.tailNum = action.payload.tailNum;
+      state.singleEngine = action.payload.singleEngine;
+      state.hobbs = action.payload.hobbs;
     });
   },
 });

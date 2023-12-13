@@ -21,7 +21,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // /api/aircraft/:aircraftId - GET the details of aircraft specified by the id
-router.get("/:AircraftId", async (req, res, next) => {
+router.get("/:aircraftId", async (req, res, next) => {
   try {
     const aircraftId = +req.params.aircraftId;
     const result = await prisma.aircraft.findUnique({
