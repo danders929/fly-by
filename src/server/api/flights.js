@@ -64,7 +64,6 @@ router.post("/", async (req, res, next) => {
   try {
     
     const { solo, picId, sicId, aircraftId, date, departure, arrival, engineStartTime, pilots} = req.body;
-    console.log(req.body);
     if (!picId || !aircraftId || !departure || !arrival) {
       const error = {
         status: 400,
