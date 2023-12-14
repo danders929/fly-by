@@ -1,17 +1,44 @@
-import React from "react";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { selectId } from "../../auth/authSlice";
+import { useGetPilotListQuery } from "./pilotSlice";
+import { useGetAircraftQuery } from "../aircraft/AircraftSlice";
+import { useCreateFlight } from "./flightLogSlice";
+
 import "./NewLog.less"
 
 export default function PilotDetailsForm() {
   const navigate = useNavigate();
-  const id = useSelector(selectId);
+  const { data: aircraft, error: aircraftError, isLoading: isAircraftLoading } = useGetAircraftQuery();
+  const { data: pilots, error: pilotsError, isLoading: isPilotsLoading } = useGetPilotListQuery();
+  const { data: newFlight, error: newFlightError, isLoading: isNewFlightLoading} = useCreateFlight();
+  
+  const isLoading = isAircraftLoading || isPilotsLoading || isNewFlightLoading;
+
+  useEffect(() => {
+    if (aircraftError) {
+      console.error("Error fetching Aircraft List:", aircraftError);
+    }
+    if (pilotsError) {
+      console.error("Error fetching Pilot List:", pilotsError);
+    }
+    if (newFlightError){
+      console.error("Error creating new flight:", newFlightError)
+    }
+  }, [aircraftError, pilotsError, newFlightError]);
+
+  // State for tracking input field variables.
+  const [isSoloChecked, setIsSoloChecked] = useState(false);
+  const [selectedPIC, setSelectedPIC] = useState("");
+  const [selectedSIC, setSelectedSIC] = useState("");
+  const [selectedAircraft, setSelectedAircraft] = useState("");
+  const [departure, setDeparture] = useState("");
+  const [arrival, setArrival] = useState("");
+  const [isDay, setIsDay] = useState(true);
+  const [isNight, setIsNight] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate(`/flight/${id}`);
+    navigate(`/flight/`);
   };
 
   return (
@@ -25,50 +52,94 @@ export default function PilotDetailsForm() {
       <form onSubmit={handleSubmit} className="form-container">
         <div className="form-group">
           <label>
-            Solo
-            <input type="checkbox" name="solo" />
+            Solo: 
+            <input
+              type="checkbox"
+              checked={isSoloChecked}
+              onChange={() => setIsSoloChecked(!isSoloChecked)}
+              id="solo"
+              />
           </label>
         </div>
         <div className="form-group">
           <label>
-            PIC
-            <input type="text" value="PIC" />
+            PIC: 
+            <select value={selectedPIC} onChange={(e) => setSelectedPIC(e.target.value)} id="PIC">
+              <option value="" disabled>Select PIC</option>
+                {pilots && pilots.map((pilot) => (
+                  <option key={pilot.id} value={pilot.id}>
+                    {`${pilot.firstName} ${pilot.lastName}`}
+                  </option>
+                  )
+                )};
+            </select>
+          </label>
+        </div>
+        {!isSoloChecked && (
+          <div className="form-group">
+            <label>
+              SIC: 
+              <select value={selectedSIC} onChange={(e) => setSelectedSIC(e.target.value)} id="SIC">
+                <option value="" disabled>Select SIC</option>
+                  {pilots && pilots.map((pilot) => (
+                    <option key={pilot.id} value={pilot.id}>
+                      {`${pilot.firstName} ${pilot.lastName}`}
+                    </option>
+                  ))};
+              </select>
+            </label>
+          </div>
+        )}
+        <div className="form-group">
+          <label>
+            Tail Number: 
+            <select value={selectedAircraft} onChange={(e) => setSelectedAircraft(e.target.value)}>
+              <option value="" disabled>Select Aircraft</option>
+                {aircraft && aircraft.map((ac) => (
+                  <option key={ac.id} value={ac.id} id="aircraft">
+                    {`${ac.tailNum}`}
+                  </option>
+                  ))}
+            </select>
           </label>
         </div>
         <div className="form-group">
           <label>
-            SIC
-            <input type="text" value="SIC" />
+            Departure: 
+            <input 
+              type="text" 
+              maxLength="4" 
+              onChange ={(e) => setDeparture(e.target.value)}
+              id="departure" />
           </label>
         </div>
         <div className="form-group">
           <label>
-            Tail Number
-            <input type="text" value="Tail Number" />
+            Arrival: 
+            <input 
+              type="text" 
+              maxLength="4" 
+              onChange ={(e) => setArrival(e.target.value)}
+              id="arrival" />
           </label>
         </div>
         <div className="form-group">
           <label>
-            Departure
-            <input type="text" maxLength="4" />
+            Day: 
+            <input 
+              type="checkbox"
+              checked={isDay}
+              onChange={(e) => setIsDay(e.target.value)}
+              id="day"/>
           </label>
         </div>
         <div className="form-group">
           <label>
-            Arrival
-            <input type="text" maxLength="4" />
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            Day
-            <input type="checkbox" />
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            Night
-            <input type="checkbox" />
+            Night: 
+            <input 
+              type="checkbox" 
+              onChange={(e) => setIsNight(e.target.value)}
+              id="night"/>
           </label>
         </div>
         <div className="button-container">
