@@ -62,11 +62,12 @@ router.get("/:id", async (req, res, next) => {
 // /api/flights - POST, create a new flight
 router.post("/", async (req, res, next) => {
   try {
-    const { solo, picId, sicId, aircraftId, date, departure, arrival, engineStartTime, } = req.body;
+    
+    const { solo, picId, sicId, aircraftId, date, departure, arrival, engineStartTime, pilots} = req.body;
     if (!picId || !aircraftId || !departure || !arrival) {
       const error = {
         status: 400,
-        message: "PIC, aircraftId, Departure, and Arrival fields are required.",
+        message: "picId, aircraftId, Departure, and Arrival fields are required.",
       };
       return next(error);
     }
@@ -80,6 +81,7 @@ router.post("/", async (req, res, next) => {
         departure,
         arrival,
         engineStartTime,
+        pilots
       },
     });
     res.json(newFlight);
@@ -106,6 +108,7 @@ router.patch("/:id", async (req, res, next) => {
         departure,
         arrival,
         engineStartTime,
+        pilots,
       },
     });
 

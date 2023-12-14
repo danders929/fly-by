@@ -2,7 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 import api from "../../../store/api";
 
 const pilotApi = api.injectEndpoints({
+  
   endpoints: (builder) => ({
+    getPilotList: builder.query({
+      query: () => `/pilots/`,
+      providesTags: ["Pilots"],
+    }),
+
     getPilot: builder.query({
       query: (usrId) => `/pilots/${usrId}`,
       providesTags: ["Pilot"],
@@ -28,6 +34,7 @@ const pilotApi = api.injectEndpoints({
 });
 
 export const {
+  useGetPilotListQuery,
   useGetPilotQuery,
   useCreatePilot,
   useUpdatePilot,

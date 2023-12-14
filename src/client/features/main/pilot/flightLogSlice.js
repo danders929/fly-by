@@ -22,7 +22,11 @@ export const flightLogApi = api.injectEndpoints({
         method: "POST",
         body: flightData,
       }),
-    }),
+      transformErrorResponse: (response) => {
+        // Assuming the error response contains the error details in response.data
+        throw new Error(response.data.message || "Failed to create flight");
+      },
+    }),    
     updateFlight: builder.mutation({
       query: (flightData) => ({
         url: `/flights/${flightData.id}`,
