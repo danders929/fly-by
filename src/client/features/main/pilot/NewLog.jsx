@@ -41,6 +41,8 @@ export default function newLogForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    sessionStorage.setItem('isDay', isDay);
+    sessionStorage.setItem('isNight', isNight);
     const dateTime = new Date();
     const flightData = {
       "solo": isSoloChecked,
