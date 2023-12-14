@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectId } from "../../auth/authSlice";
 import { useGetPilotListQuery } from "./pilotSlice";
 import { useGetAircraftQuery } from "../aircraft/AircraftSlice";
 import { useCreateFlight } from "./flightLogSlice";
 
 import "./NewLog.less"
 
-export default function PilotDetailsForm() {
+export default function newLogForm() {
   const navigate = useNavigate();
+  const usrId = useSelector(selectId);
   const { data: aircraft, error: aircraftError, isLoading: isAircraftLoading } = useGetAircraftQuery();
   const { data: pilots, error: pilotsError, isLoading: isPilotsLoading } = useGetPilotListQuery();
-  const { data: newFlight, error: newFlightError, isLoading: isNewFlightLoading} = useCreateFlight();
+  const [newFlight, { isLoading: newFlightLoading, error: newFlightError }] = useCreateFlight();
   
-  const isLoading = isAircraftLoading || isPilotsLoading || isNewFlightLoading;
+  const isLoading = isAircraftLoading || isPilotsLoading || newFlightLoading;
 
   useEffect(() => {
     if (aircraftError) {
@@ -28,17 +31,41 @@ export default function PilotDetailsForm() {
 
   // State for tracking input field variables.
   const [isSoloChecked, setIsSoloChecked] = useState(false);
-  const [selectedPIC, setSelectedPIC] = useState("");
+  const [selectedPIC, setSelectedPIC] = useState(Number(usrId));
   const [selectedSIC, setSelectedSIC] = useState("");
-  const [selectedAircraft, setSelectedAircraft] = useState("");
+  const [selectedAircraft, setSelectedAircraft] = useState(1);
   const [departure, setDeparture] = useState("");
   const [arrival, setArrival] = useState("");
   const [isDay, setIsDay] = useState(true);
   const [isNight, setIsNight] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    navigate(`/flight/`);
+    const dateTime = new Date();
+    const flightData = {
+      "solo": isSoloChecked,
+      "picId": Number(selectedPIC),
+      "sicId": isSoloChecked ? null : Number(selectedSIC),
+      "aircraftId": selectedAircraft,
+      "date": dateTime.toISOString(),
+      "departure": departure,
+      "arrival": arrival,
+      "engineStartTime": dateTime.toISOString(),
+      "pilots": {
+        "connect": [
+          { "id": Number(selectedPIC) },
+          ...(isSoloChecked ? [] : [{ "id": Number(selectedSIC) }])
+        ]
+      }
+    };
+    try {
+      const response = await newFlight(flightData).unwrap();
+      const newFlightId = response.id;
+      navigate(`/flight/${newFlightId}`);
+    } catch (err) {
+      console.error(err);
+    }
+
   };
 
   return (
@@ -47,6 +74,7 @@ export default function PilotDetailsForm() {
       <p>Image PlaceHolder</p>
       <h1>Fly-By</h1>
       <h2>New Flight Log</h2>
+      <p>{isLoading ? "Loading..." : ""}</p>
     </header>
     <section>
       <form onSubmit={handleSubmit} className="form-container">
@@ -129,7 +157,7 @@ export default function PilotDetailsForm() {
             <input 
               type="checkbox"
               checked={isDay}
-              onChange={(e) => setIsDay(e.target.value)}
+              onChange={(e) => setIsDay(e.target.checked)}
               id="day"/>
           </label>
         </div>
@@ -138,7 +166,8 @@ export default function PilotDetailsForm() {
             Night: 
             <input 
               type="checkbox" 
-              onChange={(e) => setIsNight(e.target.value)}
+              checked={isNight}
+              onChange={(e) => setIsNight(e.target.checked)}
               id="night"/>
           </label>
         </div>
