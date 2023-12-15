@@ -36,21 +36,19 @@ const aircraftApi = api.injectEndpoints({
   }),
 });
 
-export const {
-  useGetAircraftByIdQuery,
-  useGetAircraftQuery,
-  useCreateAircraft,
-  useUpdateAircraft,
-} = aircraftApi;
+export const useGetAircraftByIdQuery = aircraftApi.endpoints.getAircraftById.useQuery;
+export const useGetAircraftQuery = aircraftApi.endpoints.getAircraft.useQuery;
+export const useCreateAircraft = aircraftApi.endpoints.createAircraft.useMutation;
+export const useUpdateAircraft = aircraftApi.endpoints.updateAircraft.useMutation;
 
 const aircraftSlice = createSlice({
   name: "aircraft",
   initialState: {
-    id: "",
+    id: 0,
     makeModel: "",
     tailNum: "",
     singleEngine: null,
-    hobbs: 0,
+    hobbs: 0.00,
 
   },
   reducers: {
