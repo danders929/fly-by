@@ -54,8 +54,6 @@ export default function FlightDetailsForm() {
   const [selectedAircraft, setSelectedAircraft] = useState(flight?.aircraftId);
   const [departure, setDeparture] = useState(flight?.departure);
   const [arrival, setArrival] = useState(flight?.arrival);
-  const [isDay, setIsDay] = useState(true);
-  const [isNight, setIsNight] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
