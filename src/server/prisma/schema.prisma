@@ -51,7 +51,7 @@ model FlightTime {
   id          Int      @id @default(autoincrement())
   flightId    Int
   timeStart   DateTime
-  timeStop    DateTime
+  timeStop    DateTime?
   dayFlight   Boolean
   nightFlight Boolean
   flight      Flight   @relation(fields: [flightId], references: [id])

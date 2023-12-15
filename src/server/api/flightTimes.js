@@ -43,13 +43,14 @@ router.get("/:id", async (req, res, next) => {
 // /api/flightTimes - POST, create a new flightTime
 router.post("/", async (req, res, next) => {
   try {
-    const { flightTime } = req.body;
+    const { timeStart, timeStop, dayFlight, nightFlight, flight } = req.body;
     const newFlightTime = await prisma.flightTime.create({
       data: {
-        flightId,
         timeStart,
+        timeStop,
         dayFlight,
         nightFlight,
+        flight,
       },
     });
     res.json(newFlightTime);

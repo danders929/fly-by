@@ -95,7 +95,7 @@ router.patch("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
 
-    const { solo, picId, sicId, aircraftId, date, departure, arrival, engineStartTime, } = req.body;
+    const { solo, picId, sicId, aircraftId, date, departure, arrival, engineStartTime, engineStopTime, pilots } = req.body;
 
     const updateFlight = await prisma.flight.update({
       where: { id: id },
@@ -108,6 +108,7 @@ router.patch("/:id", async (req, res, next) => {
         departure,
         arrival,
         engineStartTime,
+        engineStopTime,
         pilots,
       },
     });
