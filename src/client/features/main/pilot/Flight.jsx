@@ -7,29 +7,56 @@ import "./Flight.less";
 export default function Flight(){
   const navigate = useNavigate();
   const { fltId } = useParams();
+
+  // State for tracking flight hours
   const [totalFlightHours, setTotalFlightHours] = useState({
     totalEngineHours: "0.00",
     totalHours: "0.00",
     day: "0.00",
     night: "0.00",
   });
-  const [isDayFlight, setIsDayFlight] = useState(true);
 
-  const { data: flight, error, isLoading } = useGetFlightQueryById(fltId);
+  // State for tracking the currentFlightTimeId
+  const [currentFlightTimeId, setCurrentFlightTimeId] = useState(0);
 
+  // State for tracking the flight status
+  const [isAirborne, setIsAirborne] = useState(false);
+  
+  // retrieves isDay and isNight from sessionStorage, converts to bool and assigns values to state.
+  const isDay = sessionStorage.isDay ==='true';
+  const isNight = sessionStorage.isNight ==='true';
+  const [isDayFlight, setIsDayFlight] = useState(isDay);
+  const [isNightFlight, setIsNightFlight] = useState(isNight);
+
+  // Retrieves current flight data
+  const { data: flight, error: flightError, isLoading: isFlightLoading } = useGetFlightQueryById(fltId);
+
+  // Creates a new flightTime record
+  const [ newFlightTime, { isLoading: newFlightTimeLoading, error: newFlightTimeError }] = useCreateFlightTimes();
+
+  // Updates current flightTime record
+  const [updateFlightTime, {isLoading: updateFlightTimeLoading, error: updateFlightTimeError }] = useUpdateFlightTimes(currentFlightTimeId);
+  
   useEffect(() => {
-    if (error) {
-      console.error("Error fetching flight data:", error);
+    if (flightError) {
+      console.error("Error fetching flight data:", flightError);
     }
-  }, [error]);
+    if (newFlightTimeError) {
+      console.error("Error creating new flight time:", newFlightTimeError);
+    }
+    if (updateFlightTimeError) {
+      console.error("Error updating current flight time:", updateFlightTimeError)
+    }
+  }, [flightError, newFlightTimeError, updateFlightTimeError]);
 
+  // function for calculating hours and returning them to the state.
   const calculateTotalFlightHours = () => {
     let totalEngineHours = 0;
     let totalHours = 0;
     let totalDayHours = 0;
     let totalNightHours = 0;
 
-    // calculates Engine Hours
+    // Calculates Engine Hours
     if (flight.engineStartTime){
       const engStart = new Date(flight.engineStartTime);
       const engStop = new Date();
@@ -57,13 +84,13 @@ export default function Flight(){
         }
       });
     }
-
+    // returns values to state rounded to two decimal places
     return {
       totalEngineHours: totalEngineHours.toFixed(2),
       totalHours: totalHours.toFixed(2),
       day: totalDayHours.toFixed(2),
       night: totalNightHours.toFixed(2),
-    }; // Round to two decimal places
+    }; 
   };
 
   // useEffect Initial Calculation
@@ -74,12 +101,13 @@ export default function Flight(){
       setTotalFlightHours(updatedTotalFlightHours);
     }
   }, [flight]);
-
+  
+  // Re-renders total times every 36 seconds or .01 hours.
   useEffect(() => {
     const intervalId = setInterval(() => {
       const updatedTotalFlightHours = calculateTotalFlightHours();
       setTotalFlightHours(updatedTotalFlightHours);
-    }, 5000);
+    }, 36000);
     return () => clearInterval(intervalId);
   }, [flight]);
   
@@ -100,29 +128,89 @@ export default function Flight(){
     return formattedWithNumber;
   };
 
-  const handleDayClick = () => {
-    //TODO: add code to set current flightTime.timeStop, 
-    //      and create a new flight time with timeStart, 
-    //      dayFlight: true, nightFlight: false, 
-    //      flight: {connect: [{ id: Number(fltId)}
-    //      and setIsDayFlight(true)
+  const handleDayClick = async (event) => {
+    //TODO: if currentFlightTime.timeStop null 
+    //        set current time as flightTime.timeStop, 
+    //        and create a new flight time with timeStart, 
+    //        dayFlight: true, nightFlight: false, 
+    //        flight: {connect: [{ id: Number(fltId)}
+    //        and setIsDayFlight(true), setIsNightFlight(false)
+    //      if currentFlightTime.timeStop !null
+    //        then setIsDayFlight(true), setIsNightFlight(false)
   }
 
-  const handleNightClick = () => {
-    //TODO: add code to set current flightTime.timeStop, 
-    //      and create a new flight time with timeStart, 
-    //      dayFlight: false, nightFlight: true, 
-    //      flight: {connect: [{ id: Number(fltId)}]}
-    //      and setIsDayFlight(false).
+  const handleNightClick = async (event) => {
+    //TODO: if currentFlightTime.timeStop null
+    setIsDayFlight(false);
+    setIsNightFlight(true);
+    if (isAirborne){
+      const dateTime = new Date();
+      const flightTimeData = {
+        "timeStop": dateTime.toISOString(),
+      }
+      const newFlightTimeData = {
+        "timeStart": dateTime.toISOString(),
+        "timeStop": null,
+        "dayFlight": isDayFlight,
+        "nightFlight": isNightFlight,
+        "flight": {
+          "connect": {
+            "id": Number(fltId),
+          }
+        }
+      }
+      try {
+        const patchFlightTime = await updateFlightTime({ id: currentFlightTimeId, ...flightTimeData }).unwrap();
+      } catch (err) {
+        console.error(err);
+      }
+      try {
+        const addFlightTime = await newFlightTime(newFlightTimeData).unwrap();
+        setCurrentFlightTimeId(response.id);
+      } catch (err){
+      }
+    }
   }
 
-  const handleWheelsUpClick = () => {
-    //TODO: add code to create a new flight with current time as timeStart,
-    //      dayFlight: isDayFlight, and flight: {connect: [{ id: Number(fltId)}]}
-  }
+  // Creates a new flightTime record with current time day/night values, and fltId
+  const handleWheelsUpClick = async (event) => {
+    const dateTime = new Date();
+    const flightTimeData = {
+      "timeStart": dateTime.toISOString(),
+      "timeStop": null,
+      "dayFlight": isDayFlight,
+      "nightFlight": isNightFlight,
+      "flight": {
+        "connect": {
+          "id": Number(fltId),
+        }
+      }
+    };
+    try {
+      const addFlightTime = await newFlightTime(flightTimeData).unwrap();
+      setCurrentFlightTimeId(response.id);
+      setIsAirborne(true);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-  const handleWheelsDownClick = () => {
+  const handleWheelsDownClick = async (event) => {
     //TODO: patch current flightTime.timeStop with current time.
+    if (isAirborne){
+      const dateTime = new Date();
+      const flightTimeData = {
+        "timeStop": dateTime.toISOString(),
+      }
+      try {
+        const patchFlightTime = await updateFlightTime({ id: currentFlightTimeId, ...flightTimeData }).unwrap();
+        setIsAirborne(false);
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      alert("You are currently not airborne.");
+    };
   }
 
   const handleEngineStopClick = (navLink) => {
@@ -140,8 +228,8 @@ export default function Flight(){
       <section className="button-container">
         <button>Day</button>
         <button>Night</button>
-        <button>Wheels Up</button>
-        <button>Wheels Down</button>
+        <button onClick={() => handleWheelsUpClick()}>Wheels Up</button>
+        <button onClick={() => handleWheelsDownClick()}>Wheels Down</button>
       </section>
       <section className="flight-data">
         <table>
@@ -163,6 +251,20 @@ export default function Flight(){
               <td>{totalFlightHours.night}hrs</td>
             </tr>
           </tbody>
+        </table>
+        <table className="flight-status">
+        <tr>
+          <td> Engine Status: </td>
+          <td>{!flight.engineStopTime ? "Running" : ""}</td>
+        </tr>
+        <tr>
+          <td> Lighting Condition: </td>
+          <td>{isDayFlight ? "Day" : "Night"}</td>
+        </tr>
+        <tr>
+          <td> Flight Status: </td>
+          <td>{isAirborne ? "In-Flight" : "Landed"}</td>
+        </tr>
         </table>
       </section>
       <section className="button-container">
