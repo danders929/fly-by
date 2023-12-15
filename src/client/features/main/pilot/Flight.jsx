@@ -34,7 +34,7 @@ export default function Flight(){
   const [isNightFlight, setIsNightFlight] = useState(isNight);
 
   // Retrieves current flight data
-  const { data: flight, error: flightError, isLoading: isFlightLoading } = useGetFlightQueryById(fltId);
+  const { data: flight, error: flightError, isLoading: isFlightLoading, refetch} = useGetFlightQueryById(fltId, { pollingInterval: 36000});
 
   // Creates a new flightTime record
   const [ newFlightTime, { isLoading: newFlightTimeLoading, error: newFlightTimeError }] = useCreateFlightTimes();
