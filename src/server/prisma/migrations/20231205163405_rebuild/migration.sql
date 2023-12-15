@@ -36,7 +36,7 @@ CREATE TABLE "FlightTime" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "flightId" INTEGER NOT NULL,
     "timeStart" DATETIME NOT NULL,
-    "timeStop" DATETIME NOT NULL,
+    "timeStop" DATETIME,
     "dayFlight" BOOLEAN NOT NULL,
     "nightFlight" BOOLEAN NOT NULL,
     CONSTRAINT "FlightTime_flightId_fkey" FOREIGN KEY ("flightId") REFERENCES "Flight" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
