@@ -1,12 +1,17 @@
 import React, {useEffect, useState} from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectId } from "../../auth/authSlice";
 import { useGetFlightQueryById, useUpdateFlight } from "./flightLogSlice";
 import { useCreateFlightTimes, useUpdateFlightTimes } from "./flightTimesSlice";
+
+
 import "./Flight.less";
 
 export default function Flight(){
   const navigate = useNavigate();
   const { fltId } = useParams();
+  const usrId = useSelector(selectId);
 
   // State for tracking flight hours
   const [totalFlightHours, setTotalFlightHours] = useState({
@@ -37,6 +42,7 @@ export default function Flight(){
   // Updates current flightTime record
   const [updateFlightTime, {isLoading: updateFlightTimeLoading, error: updateFlightTimeError }] = useUpdateFlightTimes(currentFlightTimeId);
   
+  const [updateFlight, {isLoading: updateFlightLoading, error: updateFlightError}] = useUpdateFlight(fltId);
   useEffect(() => {
     if (flightError) {
       console.error("Error fetching flight data:", flightError);
@@ -110,6 +116,7 @@ export default function Flight(){
     }, 36000);
     return () => clearInterval(intervalId);
   }, [flight]);
+
   
   // Formats the flight.date value to be MM:DD:YY
   const formatFlightDate = (flight) => {
@@ -129,18 +136,37 @@ export default function Flight(){
   };
 
   const handleDayClick = async (event) => {
-    //TODO: if currentFlightTime.timeStop null 
-    //        set current time as flightTime.timeStop, 
-    //        and create a new flight time with timeStart, 
-    //        dayFlight: true, nightFlight: false, 
-    //        flight: {connect: [{ id: Number(fltId)}
-    //        and setIsDayFlight(true), setIsNightFlight(false)
-    //      if currentFlightTime.timeStop !null
-    //        then setIsDayFlight(true), setIsNightFlight(false)
+    setIsDayFlight(true);
+    setIsNightFlight(false);
+  
+    if (isAirborne) {
+      const dateTime = new Date();
+      const flightTimeData = {
+        "timeStop": dateTime.toISOString(),
+      }
+      const newFlightTimeData = {
+        "timeStart": dateTime.toISOString(),
+        "timeStop": null,
+        "dayFlight": true,
+        "nightFlight": false,
+        "flight": {
+          "connect": {
+            "id": Number(fltId),
+          }
+        }
+      }
+  
+      try {
+        const updateFlightTimeResponse = await updateFlightTime({ id: currentFlightTimeId, ...flightTimeData }).unwrap();
+        const newFlightTimeResponse = await newFlightTime(newFlightTimeData).unwrap();
+        setCurrentFlightTimeId(newFlightTimeResponse.id);
+      } catch (err) {
+        console.error(err);
+      }
+    }
   }
 
   const handleNightClick = async (event) => {
-    //TODO: if currentFlightTime.timeStop null
     setIsDayFlight(false);
     setIsNightFlight(true);
     if (isAirborne){
@@ -151,23 +177,21 @@ export default function Flight(){
       const newFlightTimeData = {
         "timeStart": dateTime.toISOString(),
         "timeStop": null,
-        "dayFlight": isDayFlight,
-        "nightFlight": isNightFlight,
+        "dayFlight": false,
+        "nightFlight": true,
         "flight": {
           "connect": {
             "id": Number(fltId),
           }
         }
       }
+
       try {
-        const patchFlightTime = await updateFlightTime({ id: currentFlightTimeId, ...flightTimeData }).unwrap();
+        const updateFlightTimeResponse = await updateFlightTime({ id: currentFlightTimeId, ...flightTimeData }).unwrap();
+        const newFlightTimeResponse = await newFlightTime(newFlightTimeData).unwrap();
+        setCurrentFlightTimeId(newFlightTimeResponse.id);
       } catch (err) {
         console.error(err);
-      }
-      try {
-        const addFlightTime = await newFlightTime(newFlightTimeData).unwrap();
-        setCurrentFlightTimeId(response.id);
-      } catch (err){
       }
     }
   }
@@ -187,8 +211,8 @@ export default function Flight(){
       }
     };
     try {
-      const addFlightTime = await newFlightTime(flightTimeData).unwrap();
-      setCurrentFlightTimeId(response.id);
+      const newFlightTimeResponse = await newFlightTime(flightTimeData).unwrap();
+      setCurrentFlightTimeId(newFlightTimeResponse.id);
       setIsAirborne(true);
     } catch (err) {
       console.error(err);
@@ -203,7 +227,7 @@ export default function Flight(){
         "timeStop": dateTime.toISOString(),
       }
       try {
-        const patchFlightTime = await updateFlightTime({ id: currentFlightTimeId, ...flightTimeData }).unwrap();
+        const updateFlightTimeResponse = await updateFlightTime({ id: currentFlightTimeId, ...flightTimeData }).unwrap();
         setIsAirborne(false);
       } catch (err) {
         console.error(err);
@@ -213,10 +237,18 @@ export default function Flight(){
     };
   }
 
-  const handleEngineStopClick = (navLink) => {
-    //TODO: add code to patch flight table engineStopTime with current time,
-    //      and navigate to flight details page.
-    navigate(navLink);
+  const handleEngineStopClick = async (event) => {
+    const dateTime = new Date();
+    const flightData = {
+      "engineStopTime" : dateTime.toISOString(),
+    }
+
+    try {
+      const updateFlightResponse = await updateFlight({ id: fltId, ...flightData });
+    } catch (err) {
+      console.error(err);
+    }
+    navigate(`/pilot/${usrId}/flight_log/${fltId}`);
   }
   return (
     <>
@@ -226,8 +258,8 @@ export default function Flight(){
         <h2>Flight: {flight && formatFlightDate(flight)}</h2>
       </header>
       <section className="button-container">
-        <button>Day</button>
-        <button>Night</button>
+        <button onClick={() => handleDayClick()}>Day</button>
+        <button onClick={() => handleNightClick()}>Night</button>
         <button onClick={() => handleWheelsUpClick()}>Wheels Up</button>
         <button onClick={() => handleWheelsDownClick()}>Wheels Down</button>
       </section>
@@ -253,22 +285,24 @@ export default function Flight(){
           </tbody>
         </table>
         <table className="flight-status">
-        <tr>
-          <td> Engine Status: </td>
-          <td>{!flight.engineStopTime ? "Running" : ""}</td>
-        </tr>
-        <tr>
-          <td> Lighting Condition: </td>
-          <td>{isDayFlight ? "Day" : "Night"}</td>
-        </tr>
-        <tr>
-          <td> Flight Status: </td>
-          <td>{isAirborne ? "In-Flight" : "Landed"}</td>
-        </tr>
+          <tbody>
+            <tr>
+              <td> Engine Status: </td>
+              <td>{!flight?.engineStopTime ? "Running" : ""}</td>
+            </tr>
+            <tr>
+              <td> Lighting Condition: </td>
+              <td>{isDayFlight ? "Day" : "Night"}</td>
+            </tr>
+            <tr>
+              <td> Flight Status: </td>
+              <td>{isAirborne ? "In-Flight" : "Landed"}</td>
+            </tr>
+          </tbody>
         </table>
       </section>
       <section className="button-container">
-        <button onClick={() => handleStopClick(`/pilot/${usrId}/flight_log/${fltId}`)}>Engine Stop</button>
+        <button onClick={() => handleEngineStopClick()}>Engine Stop</button>
       </section>
     </>
   );
