@@ -3,6 +3,12 @@ import api from "../../../store/api";
 
 export const flightLogApi = api.injectEndpoints({
   endpoints: (builder) => ({
+    getFlightById: builder.query({
+      query: (fltId) => ({
+        url: `/flights/${fltId}`,
+      }),
+      providesTags: ["Flight"],
+    }),
     getflight: builder.query({
       query: (usrId) => ({
         url: `/flights/?usrId=${usrId}`,
@@ -16,7 +22,11 @@ export const flightLogApi = api.injectEndpoints({
         method: "POST",
         body: flightData,
       }),
-    }),
+      transformErrorResponse: (response) => {
+        // Assuming the error response contains the error details in response.data
+        throw new Error(response.data.message || "Failed to create flight");
+      },
+    }),    
     updateFlight: builder.mutation({
       query: (flightData) => ({
         url: `/flights/${flightData.id}`,
@@ -27,7 +37,7 @@ export const flightLogApi = api.injectEndpoints({
     }),
   }),
 });
-
+export const useGetFlightQueryById = flightLogApi.endpoints.getFlightById.useQuery;
 export const useGetFlightQuery = flightLogApi.endpoints.getflight.useQuery;
 export const useCreateFlight = flightLogApi.endpoints.createflight.useMutation;
 export const useUpdateFlight = flightLogApi.endpoints.updateFlight.useMutation;
@@ -56,7 +66,9 @@ const flightLogSlice = createSlice({
   initialState: {
     id: sessionStorage.getItem(FLIGHT_ID),
     engineStartTime: sessionStorage.getItem(ENG_START),
-    flights: [], 
+    pilots: [],
+    aircraft: {},
+    flights: [],
   },
   reducers: {
     resetFlightLog: (state) => {
@@ -65,7 +77,7 @@ const flightLogSlice = createSlice({
     },
     updateFlightData: (
       state,
-      { payload: { flightId, solo, picId, sicId, aircraftId, engineStartTime, departure, arrival, engineStopTime } }
+      { payload: { flightId, solo, picId, sicId, aircraftId, departure, arrival, engineStopTime } }
     ) => {
       return {
         type: "updateFlightData",
@@ -75,15 +87,20 @@ const flightLogSlice = createSlice({
           picId,
           sicId,
           aircraftId,
-          engineStartTime,
           departure,
           arrival,
-          engineStopTime,
+          pilots,
         },
       };
     },
   },
   extraReducers: (builder) => {
+    builder.addMatcher(
+      flightLogApi.endpoints.getFlightById.matchFulfilled,
+      (state, action) => {
+        state.flights = action.payload;
+      }
+    );
     
     builder.addMatcher(
       flightLogApi.endpoints.getflight.matchFulfilled,

@@ -30,11 +30,9 @@ const flightTimesApi = api.injectEndpoints({
   }),
 });
 
-export const {
-  useGetFlightTimesQuery,
-  useCreateFlightTimes,
-  useUpdateFlightTimes,
-} = flightTimesApi;
+export const useGetFlightTimesQuery = flightTimesApi.endpoints.getflightTime.useQuery;
+export const useUpdateFlightTimes = flightTimesApi.endpoints.updateFlightTime.useMutation;
+export const useCreateFlightTimes = flightTimesApi.endpoints.createflightTime.useMutation;
 
 const INITIAL_FLIGHT_START = "initialFlightTimeStart"
 const FLIGHT_START = "flightTimeStart"

@@ -44,6 +44,8 @@ router.get("/:id", async (req, res, next) => {
         id: id,
       },
       include: {
+        pilots: true,
+        aircraft: true,
         FlightTimes: true,
       },
     });
@@ -62,11 +64,12 @@ router.get("/:id", async (req, res, next) => {
 // /api/flights - POST, create a new flight
 router.post("/", async (req, res, next) => {
   try {
-    const { solo, picId, sicId, aircraftId, date, departure, arrival, engineStartTime, } = req.body;
+    
+    const { solo, picId, sicId, aircraftId, date, departure, arrival, engineStartTime, pilots} = req.body;
     if (!picId || !aircraftId || !departure || !arrival) {
       const error = {
         status: 400,
-        message: "PIC, aircraftId, Departure, and Arrival fields are required.",
+        message: "picId, aircraftId, Departure, and Arrival fields are required.",
       };
       return next(error);
     }
@@ -80,6 +83,7 @@ router.post("/", async (req, res, next) => {
         departure,
         arrival,
         engineStartTime,
+        pilots
       },
     });
     res.json(newFlight);
@@ -93,7 +97,7 @@ router.patch("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
 
-    const { solo, picId, sicId, aircraftId, date, departure, arrival, engineStartTime, } = req.body;
+    const { solo, picId, sicId, aircraftId, departure, arrival, engineStopTime, pilots } = req.body;
 
     const updateFlight = await prisma.flight.update({
       where: { id: id },
@@ -102,10 +106,10 @@ router.patch("/:id", async (req, res, next) => {
         picId,
         sicId,
         aircraftId,
-        date,
         departure,
         arrival,
-        engineStartTime,
+        engineStopTime,
+        pilots,
       },
     });
 
@@ -117,22 +121,22 @@ router.patch("/:id", async (req, res, next) => {
 
 // *Not needed currently, but may implement later on 
 // /api/flights/:id - DELETE, deletes a flight by id number
-// router.delete("/:id", async (req, res, next) => {
-//   try {
-//     const id = +req.params.id;
-//     const result = await prisma.flight.delete({
-//       where: {
-//         id: id,
-//       },
-//     });
-//     if (!result) {
-//       return next({
-//         status: 404,
-//         message: `Could not find flight with id ${id}`,
-//       });
-//     }
-//     res.json(result);
-//   } catch (err) {
-//     next(err);
-//   }
-//});
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const id = +req.params.id;
+    const result = await prisma.flight.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (!result) {
+      return next({
+        status: 404,
+        message: `Could not find flight with id ${id}`,
+      });
+    }
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+});

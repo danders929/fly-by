@@ -1,161 +1,181 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect }from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { selectId } from "../../auth/authSlice";
-
-const flight = {
-  // Placeholder object for flight
-  name: "null",
-  aircraft: { singleEngine: false },
-  solo: false,
-  picId: { name: "null" },
-  sicId: { name: "null" },
-  date: "null",
-  departure: "null",
-  arrival: "null",
-};
-
-function checkEngineType() {
-  if (flight.aircraft.singleEngine) {
-    return "Single Engine";
-  } else {
-    return "Multi-Engine";
-  }
-}
+import { useGetFlightQueryById, useUpdateFlight } from "./flightLogSlice";
+import { useGetPilotListQuery } from "./pilotSlice";
+import { useGetAircraftQuery } from "../aircraft/AircraftSlice";
 
 export default function FlightDetailsForm() {
   const navigate = useNavigate();
-  const usrId = useSelector(selectId);
-  const { fltId } = useParams();
+  const { usrId, fltId } = useParams();
 
-  // placeholder data for flight data
-  const engineType = checkEngineType();
-  let engineRuntime = 0.0;
-  let totalFlightTime = 0.0;
-  let dayFlightHours = 0.0;
-  let nightFlightHours = 0.0;
+  const { data: pilots, error: pilotsError, isLoading: isPilotsLoading } = useGetPilotListQuery();
+  const { data: flight, flightError, isFlightLoading } = useGetFlightQueryById(fltId);
+  const { data: aircraft, error: aircraftError, isLoading: isAircraftLoading } = useGetAircraftQuery();
+  const [updateFlight, {isLoading: updateFlightLoading, error: updateFlightError}] = useUpdateFlight(fltId);
+  
+  const isLoading = isPilotsLoading || isFlightLoading || isAircraftLoading || updateFlightLoading;
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    navigate(`/pilot/${usrId}/flight_log/${fltId}`);
+  useEffect(() => {
+    if (pilotsError) {
+      console.error("Error fetching Pilot List:", pilotsError);
+    }
+    if (flightError) {
+      console.error("Error fetching flight data:", flightError)
+    }
+    if (aircraftError) {
+      console.error("Error loading aircraft data:", aircraftError)
+    }
+    if (updateFlightError){
+      console.error("Error updating flight data")
+    }
+  }, [ pilotsError, flightError, aircraftError, updateFlightError]);
+
+  // Formats the flight.date value to be MM:DD:YY
+  const formatFlightDate = (flight) => {
+    // Get date components
+    const flightDate = new Date(flight.date);
+    const month = String(flightDate.getMonth() + 1).padStart(2, "0");
+    const day = String(flightDate.getDate()).padStart(2, "0");
+    const year = String(flightDate.getFullYear()).slice(2);
+
+    // Create the formatted date string (MM/DD/YY)
+    const formattedDate = `${month}/${day}/${year}`;
+
+    // Create the formatted date string with flight number (MM/DD/YY:N)
+    const formattedWithNumber = `${formattedDate}`;
+  
+    return formattedWithNumber;
   };
 
+  // State for tracking input field variables.
+  const [isSoloChecked, setIsSoloChecked] = useState(flight?.solo);
+  const [selectedPIC, setSelectedPIC] = useState(flight?.picId);
+  const [selectedSIC, setSelectedSIC] = useState(flight?.sicId);
+  const [selectedAircraft, setSelectedAircraft] = useState(flight?.aircraftId);
+  const [departure, setDeparture] = useState(flight?.departure);
+  const [arrival, setArrival] = useState(flight?.arrival);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const updatedFlightData = {
+        "id": Number(fltId),
+        "solo": isSoloChecked,
+        "picId": Number(selectedPIC),
+        "sicId": isSoloChecked ? null : Number(selectedSIC),
+        "aircraftId": Number(selectedAircraft),
+        "departure": departure,
+        "arrival": arrival,
+        "pilots": {
+          "connect": [
+            { "id": Number(selectedPIC) },
+            ...(isSoloChecked ? [] : [{ "id": Number(selectedSIC) }])
+          ]
+        }
+      }
+      const result = await updateFlight(updatedFlightData);
+      navigate(`/pilot/${usrId}/flight_log/${fltId}`);
+    } catch (error) {
+      console.error("Error Updating Flight", error);
+    }
+  };
+
+  // Check pilots, flight, and aircraft are loading or undefined
+  if (isLoading || !pilots || !flight || !aircraft) {
+    return <div>Loading...</div>;
+  }
   return (
     <>
       <header>
         <p>Image PlaceHolder</p>
         <h1>Fly-By</h1>
-        <h2>Flight: {flight.name}</h2>
+        <h2>Flight: {flight && formatFlightDate(flight)}</h2>
       </header>
       <section>
         <h3>Flight Details</h3>
-        <form onSubmit={handleSubmit}>
-          <label>
-            Pilot in Command:{" "}
-            <input 
-              type="text" 
-              value={flight.picId.name}
-              onChange={(e) => {
-                //code for handling update to field
-              }}
+        <form onSubmit={handleSubmit} className="form-container">
+          <div className="form-group">
+            <label>
+              Solo: 
+              <input
+                type="checkbox"
+                checked={isSoloChecked}
+                onChange={() => {
+                  setIsSoloChecked(!isSoloChecked);
+                  // If Solo is checked, clear the selected SIC
+                  if (!isSoloChecked) {
+                    setSelectedSIC(null);
+                  }
+                }}
+                id="solo"
               />
-          </label>
-          <label>
-            Second in Command:{" "}
-            <input 
-              type="text" 
-              value={flight.sicId.name}
-              onChange={(e) => {
-                //code for handling update to field
-              }}
-            />
-          </label>
-          <label>
-            Tail Number: <input 
-              type="text" 
-              value={flight.aircraft.tailnumber}
-              onChange={(e) => {
-                //code for handling update to field
-              }}
+            </label>
+          </div>
+          <div className="form-group">
+            <label>
+              PIC: 
+              <select value={selectedPIC} onChange={(e) => setSelectedPIC(e.target.value)} id="PIC">
+                <option value="" disabled>Select PIC</option>
+                {pilots && pilots.map((pilot) => (
+                  <option key={pilot.id} value={pilot.id}>
+                    {`${pilot.firstName} ${pilot.lastName}`}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+          {!isSoloChecked && (
+            <div className="form-group">
+              <label>
+                SIC: 
+                <select value={selectedSIC} onChange={(e) => setSelectedSIC(e.target.value)} id="SIC">
+                  <option value="" disabled>Select SIC</option>
+                  {pilots && pilots.map((pilot) => (
+                    <option key={pilot.id} value={pilot.id}>
+                      {`${pilot.firstName} ${pilot.lastName}`}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          )}
+          <div className="form-group">
+            <label>
+              Tail Number: 
+              <select value={selectedAircraft} onChange={(e) => setSelectedAircraft(e.target.value)}>
+                <option value="" disabled>Select Aircraft</option>
+                {aircraft && aircraft.map((ac) => (
+                  <option key={ac.id} value={ac.id} id="aircraft">
+                    {`${ac.tailNum}`}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+          <div className="form-group">
+            <label>
+              Departure: 
+              <input 
+                type="text"
+                value={departure}
+                maxLength="4"
+                onChange={(e) => setDeparture(e.target.value)}
+                id="departure"
               />
-          </label>
-          <label>
-            Aircraft: <input 
-              type="text" 
-              value={flight.aircraft.makeModel}
-              onChange={(e) => {
-                //code for handling update to field
-              }} />
-          </label>
-          <label>
-            Engine Type: <input 
-              type="text" 
-              value={engineType}
-              onChange={(e) => {
-                //code for handling update to field
-              }} />
-          </label>
-          <label>
-            Airport Departure:{" "}
-            <input 
-              type="text" 
-              value={flight.departure}
-              onChange={(e) => {
-                //code for handling update to field
-              }} />
-          </label>
-          <label>
-            Airport Arrival: <input 
-            type="text" 
-            value={flight.arrival}
-            onChange={(e) => {
-                //code for handling update to field
-              }} />
-          </label>
-          <label>
-            <input 
-              type="checkbox" 
-              value={flight.solo}
-              onChange={(e) => {
-                //code for handling update to field
-              }} /> Solo
-          </label>
-          <h3>Flight Hours</h3>
-          <label>
-            Engine Runtime: <input 
-              type="number" 
-              value={engineRuntime}
-              onChange={(e) => {
-                //code for handling update to field
-              }} />
-          </label>
-          <label>
-            Total Flight Time:{" "}
-            <input 
-              type="number" 
-              value={totalFlightTime}
-              onChange={(e) => {
-                //code for handling update to field
-              }} />
-          </label>
-          <label>
-            Day Flight Hours:{" "}
-            <input 
-              type="number" 
-              value={dayFlightHours}
-              onChange={(e) => {
-                //code for handling update to field
-              }} />
-          </label>
-          <label>
-            Night Flight Hours:{" "}
-            <input 
-              type="number" 
-              value={nightFlightHours}
-              onChange={(e) => {
-                //code for handling update to field
-              }} />
-          </label>
+            </label>
+          </div>
+          <div className="form-group">
+            <label>
+              Arrival: 
+              <input 
+                type="text"
+                value={arrival}
+                maxLength="4" 
+                onChange={(e) => setArrival(e.target.value)}
+                id="arrival"
+              />
+            </label>
+          </div>
           <button type="submit">Update</button>
         </form>
       </section>

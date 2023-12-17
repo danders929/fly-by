@@ -13,7 +13,7 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const token = useSelector(selectToken);
-  const usrId = useSelector(selectId);
+  const usrId = sessionStorage.getItem('userId')
   const handleLogout = async () => {
     await dispatch(logout());
     navigate("/");
@@ -22,14 +22,17 @@ export default function Navbar() {
 
   return (
     <nav className="top">
-      <h1>Fly-By</h1>
       <menu>
-        <li>
-          <NavLink to={`/home`}>Home</NavLink>
-        </li>
-        <li>
-          <NavLink to={`/pilot/${usrId}`}>Profile</NavLink>
-        </li>
+        {token ? (
+          <>
+            <li>
+              <NavLink to={`/home`}>Home</NavLink>
+            </li>
+            <li>
+              <NavLink to={`/pilot/${usrId}`}>Profile</NavLink>
+            </li>
+          </>
+        ) : null}
         {token ? (
           <li>
             <a onClick={handleLogout}>Log Out</a>

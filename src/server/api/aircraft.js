@@ -21,7 +21,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // /api/aircraft/:aircraftId - GET the details of aircraft specified by the id
-router.get("/:AircraftId", async (req, res, next) => {
+router.get("/:aircraftId", async (req, res, next) => {
   try {
     const aircraftId = +req.params.aircraftId;
     const result = await prisma.aircraft.findUnique({
@@ -52,19 +52,12 @@ router.get("/:AircraftId", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const { makeModel, tailNum, singleEngine, hobbs } = req.body;
-    if (!makeModel || !tailNum || !singleEngine || !hobbs) {
-      const error = {
-        status: 400,
-        message: "All fields are required.",
-      };
-      return next(error);
-    }
     const newAircraft = await prisma.aircraft.create({
       data: {
         makeModel: makeModel,
         tailNum: tailNum,
         singleEngine: singleEngine,
-        hobbs: hobbs,
+        hobbs: parseFloat(hobbs),
       },
     });
     res.json(newAircraft);

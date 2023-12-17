@@ -21,7 +21,7 @@ model Pilot {
   id           Int      @id @default(autoincrement())
   firstName    String
   lastName     String
-  userId       Int
+  userId       Int      @unique
   flights      Flight[] @relation("FlightPilots")
   flightsAsPic Flight[] @relation("FlightPic")
   flightsAsSic Flight[] @relation("FlightSic")
@@ -51,7 +51,7 @@ model FlightTime {
   id          Int      @id @default(autoincrement())
   flightId    Int
   timeStart   DateTime
-  timeStop    DateTime
+  timeStop    DateTime?
   dayFlight   Boolean
   nightFlight Boolean
   flight      Flight   @relation(fields: [flightId], references: [id])

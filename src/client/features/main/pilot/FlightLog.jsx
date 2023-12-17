@@ -1,23 +1,28 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { selectId } from "../../auth/authSlice";
 import { useGetFlightQuery } from "./flightLogSlice"; 
-import { selectFirstName, useGetPilotQuery } from "./pilotSlice";
+import { useGetPilotQuery } from "./pilotSlice";
 
 const FlightLog = () => {
-  const usrId = useSelector(selectId);
+  const usrId = sessionStorage.getItem('userId');
+  const pilotId = sessionStorage.getItem('pilotId')
+  
   // queries the api for flights
-  const { data: flights, error, isLoading } = useGetFlightQuery(usrId);
+  const { data: flights, error: flightError, isLoading: isFlightLoading } = useGetFlightQuery(pilotId);
 
   // queries the api for pilot's first name and assigns it to pilotName
-  const { data: pilotData } = useGetPilotQuery(usrId);
-  
+  const { data: pilotData, error: pilotError, isLoading: isPilotLoading } = useGetPilotQuery(usrId);
+
+  const isLoading = isFlightLoading || isPilotLoading;
+
   useEffect(() => {    
-    if (error) {
-      console.error("Error fetching flight data:", error);
+    if (flightError) {
+      console.error("Error fetching flight data:", flightError);
     }
-  }, [error]);
+    if (pilotError) {
+      console.error("Error fetching pilot data:", pilotError);
+    }
+  }, [flightError, pilotError]);
 
   // Calculate total flight hours
   const calculateTotalFlightHours = () => {
@@ -71,7 +76,7 @@ const FlightLog = () => {
   
     return formattedWithNumber;
   };
-  const pilotName = useSelector(selectFirstName);
+  
   const totalFlightHours = calculateTotalFlightHours();
   return (
     <>
