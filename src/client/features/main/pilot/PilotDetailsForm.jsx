@@ -42,7 +42,7 @@ export default function PilotDetailsForm(){
   return (
     <>
       <header>
-        <p>Image PlaceHolder</p>
+        <img className="logo" src="/airplane.svg" alt="airplane logo" />
         <h1>Fly-By</h1>
         <h2>Account Details</h2>
       </header>

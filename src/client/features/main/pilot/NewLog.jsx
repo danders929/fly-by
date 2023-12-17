@@ -95,7 +95,7 @@ export default function newLogForm() {
   return (
     <>
     <header>
-      <p>Image PlaceHolder</p>
+      <img className="logo" src="/airplane.svg" alt="airplane logo" />
       <h1>Fly-By</h1>
       <h2>New Flight Log</h2>
       <p>{isLoading ? "Loading..." : ""}</p>

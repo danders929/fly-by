@@ -253,7 +253,7 @@ export default function Flight(){
   return (
     <>
       <header>
-        <p>Image PlaceHolder</p>
+        <img className="logo" src="/airplane.svg" alt="airplane logo" />
         <h1>Fly-By</h1>
         <h2>Flight: {flight && formatFlightDate(flight)}</h2>
       </header>

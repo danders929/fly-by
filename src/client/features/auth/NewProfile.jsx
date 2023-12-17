@@ -47,7 +47,7 @@ export default function NewProfile() {
   return (
     <>
       <header>
-        <p>Image PlaceHolder</p>
+      <img className="logo" src="/airplane.svg" alt="airplane logo" />
         <h1>Fly-By</h1>
         <h2>Sign Up Form</h2>
       </header>
