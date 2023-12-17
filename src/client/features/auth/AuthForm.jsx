@@ -28,7 +28,6 @@ export default function AuthForm() {
   const attemptAuth = async (evt) => {
     evt.preventDefault();
 
-    const authMethod = isLogin ? login : register;
     const credentials = { email, password };
     
     // We don't want to navigate if there's an error.
@@ -36,10 +35,10 @@ export default function AuthForm() {
     // so we can use a try/catch to handle it.
     try {
       if (!isLogin){
-        register(credentials).unwrap();
+        await register(credentials).unwrap();
         navigate(`/newProfile`)
       } else {
-        login(credentials).unwrap();
+        await login(credentials).unwrap();
         navigate(`/home`);
       }
     } catch (err) {

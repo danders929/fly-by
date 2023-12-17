@@ -23,12 +23,16 @@ export default function Navbar() {
   return (
     <nav className="top">
       <menu>
-        <li>
-          <NavLink to={`/home`}>Home</NavLink>
-        </li>
-        <li>
-          <NavLink to={`/pilot/${usrId}`}>Profile</NavLink>
-        </li>
+        {token ? (
+          <>
+            <li>
+              <NavLink to={`/home`}>Home</NavLink>
+            </li>
+            <li>
+              <NavLink to={`/pilot/${usrId}`}>Profile</NavLink>
+            </li>
+          </>
+        ) : null}
         {token ? (
           <li>
             <a onClick={handleLogout}>Log Out</a>
