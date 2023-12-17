@@ -34,6 +34,7 @@ const USER_ID = "userId"
 /** Reducer that stores payload's token in state and session storage */
 const storeToken = (state, { payload }) => {
   state.token = payload.token;
+  state.userId = payload.id
   sessionStorage.setItem(TOKEN_KEY, payload.token);
   sessionStorage.setItem(USER_ID, payload.userId);
 };
@@ -46,19 +47,12 @@ const authSlice = createSlice({
     id: sessionStorage.getItem(USER_ID),
   },
   reducers: {
-    /** Logging out means wiping the stored token */
+    /** Logging out means wiping the state */
     logout: (state) => {
-      state.token = null;
-      state.id = null;
-      sessionStorage.removeItem(TOKEN_KEY);
+      sessionStorage.clear();
     },
   },
   extraReducers: (builder) => {
-    // Additional reducers that reset the state when logging out
-    builder.addCase(logout, (state) => {
-      resetPilot(state);
-      resetFlightLog(state);
-    });
     // Store token when register or login succeeds
     builder.addMatcher(api.endpoints.register.matchFulfilled, storeToken);
     builder.addMatcher(api.endpoints.login.matchFulfilled, storeToken);

@@ -66,6 +66,8 @@ const flightLogSlice = createSlice({
   initialState: {
     id: sessionStorage.getItem(FLIGHT_ID),
     engineStartTime: sessionStorage.getItem(ENG_START),
+    pilots: [],
+    aircraft: {},
     flights: [],
   },
   reducers: {
@@ -75,7 +77,7 @@ const flightLogSlice = createSlice({
     },
     updateFlightData: (
       state,
-      { payload: { flightId, solo, picId, sicId, aircraftId, engineStartTime, departure, arrival, engineStopTime } }
+      { payload: { flightId, solo, picId, sicId, aircraftId, departure, arrival, engineStopTime } }
     ) => {
       return {
         type: "updateFlightData",
@@ -85,10 +87,9 @@ const flightLogSlice = createSlice({
           picId,
           sicId,
           aircraftId,
-          engineStartTime,
           departure,
           arrival,
-          engineStopTime,
+          pilots,
         },
       };
     },

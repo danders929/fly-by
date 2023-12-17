@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { selectId, useLoginMutation, useRegisterMutation } from "./authSlice";
-import { useSelector } from "react-redux";
+import { useLoginMutation, useRegisterMutation } from "./authSlice";
 
 
 /** This form allows users to register or log in. */
 export default function AuthForm() {
   const navigate = useNavigate();
 
-  const id = useSelector(selectId);
   // Handles swapping between login and register
   const [isLogin, setIsLogin] = useState(true);
   const authAction = isLogin ? "Login" : "Register";
@@ -19,8 +17,6 @@ export default function AuthForm() {
   // Controlled form fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // Store userId from state
 
   // Form submission
   const [login, { isLoading: loginLoading, error: loginError }] =
@@ -39,9 +35,13 @@ export default function AuthForm() {
     // `unwrap` will throw an error if there is one
     // so we can use a try/catch to handle it.
     try {
-      await authMethod(credentials).unwrap();
-      //TODO: Check if profile exists, if so navigate to home. Else, navigate to pilotUpdate
-      navigate(`/home`);
+      if (!isLogin){
+        register(credentials).unwrap();
+        navigate(`/newProfile`)
+      } else {
+        login(credentials).unwrap();
+        navigate(`/home`);
+      }
     } catch (err) {
       console.error(err);
     }

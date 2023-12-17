@@ -33,40 +33,60 @@ const pilotApi = api.injectEndpoints({
   }),
 });
 
+export const useCreatePilot = pilotApi.endpoints.createPilot.useMutation;
+export const   useUpdatePilot = pilotApi.endpoints.updatePilot.useMutation;
 export const {
   useGetPilotListQuery,
   useGetPilotQuery,
-  useCreatePilot,
-  useUpdatePilot,
 } = pilotApi;
+
+//** Session storage key for firstName and pilotId */
+const FIRST_NAME = "firstName";
+const LAST_NAME = "lastName"
+const PILOT_ID = "pilotId";
+
+//** Reducer that stores payloads FirstName, and pilotId */
+const storePilotDetails = (state, { payload }) => {
+  state.firstName = payload.firstName;
+  state.lastName = payload.lastName;
+  state.pilotId = payload.id;
+  sessionStorage.setItem(FIRST_NAME, payload.firstName);
+  sessionStorage.setItem(LAST_NAME, payload.lastName)
+  sessionStorage.setItem(PILOT_ID, payload.id);
+}
 
 const pilotSlice = createSlice({
   name: "pilot",
   initialState: {
-    firstName: "",
-    lastName: "",
+    firstName: sessionStorage.getItem(FIRST_NAME),
+    lastName: sessionStorage.getItem(LAST_NAME),
+    pilotId: sessionStorage.getItem(PILOT_ID),
   },
   reducers: {
     setFirstName: (state, action) => {
       state.firstName = action.payload;
     },
     setLastName: (state, action) => {
-      state.firstName = action.payload;
+      state.lastName = action.payload;
+    },
+    setPilotId: (state, action) => {
+      state.pilotId = action.payload;
     },
     resetPilot: (state) => {
       state.firstName = "";
+      state.pilotId = "";
+      sessionStorage.removeItem(FIRST_NAME);
+      sessionStorage.removeItem(PILOT_ID);
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(pilotApi.endpoints.getPilot.matchFulfilled, (state, action) => {
-      state.firstName = action.payload.firstName;
-      state.lastName = action.payload.lastName;
-    });
+    builder.addMatcher(pilotApi.endpoints.getPilot.matchFulfilled, storePilotDetails);
   },
 });
 
-export const { setFirstName, setLastName } = pilotSlice.actions;
+export const { setFirstName, setLastName, setPilotId } = pilotSlice.actions;
 export const selectFirstName = (state) => state.pilot.firstName;
 export const selectLastName = (state) => state.pilot.lastName;
+export const selectPilotId = (state) => state.pilot.pilotId;
 
 export default pilotSlice.reducer;

@@ -1,15 +1,14 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { selectId } from "../../auth/authSlice";
 import { useGetFlightQuery } from "./flightLogSlice"; 
 import { useGetPilotQuery } from "./pilotSlice";
 
 const FlightLog = () => {
-  const usrId = useSelector(selectId);
+  const usrId = sessionStorage.getItem('userId');
+  const pilotId = sessionStorage.getItem('pilotId')
   
   // queries the api for flights
-  const { data: flights, error: flightError, isLoading: isFlightLoading } = useGetFlightQuery(usrId);
+  const { data: flights, error: flightError, isLoading: isFlightLoading } = useGetFlightQuery(pilotId);
 
   // queries the api for pilot's first name and assigns it to pilotName
   const { data: pilotData, error: pilotError, isLoading: isPilotLoading } = useGetPilotQuery(usrId);

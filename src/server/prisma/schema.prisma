@@ -21,7 +21,7 @@ model Pilot {
   id           Int      @id @default(autoincrement())
   firstName    String
   lastName     String
-  userId       Int
+  userId       Int      @unique
   flights      Flight[] @relation("FlightPilots")
   flightsAsPic Flight[] @relation("FlightPic")
   flightsAsSic Flight[] @relation("FlightSic")

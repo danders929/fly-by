@@ -55,9 +55,29 @@ export default function FlightDetailsForm() {
   const [departure, setDeparture] = useState(flight?.departure);
   const [arrival, setArrival] = useState(flight?.arrival);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    navigate(`/pilot/${usrId}/flight_log/${fltId}`);
+    try {
+      const updatedFlightData = {
+        "id": Number(fltId),
+        "solo": isSoloChecked,
+        "picId": Number(selectedPIC),
+        "sicId": isSoloChecked ? null : Number(selectedSIC),
+        "aircraftId": Number(selectedAircraft),
+        "departure": departure,
+        "arrival": arrival,
+        "pilots": {
+          "connect": [
+            { "id": Number(selectedPIC) },
+            ...(isSoloChecked ? [] : [{ "id": Number(selectedSIC) }])
+          ]
+        }
+      }
+      const result = await updateFlight(updatedFlightData);
+      navigate(`/pilot/${usrId}/flight_log/${fltId}`);
+    } catch (error) {
+      console.error("Error Updating Flight", error);
+    }
   };
 
   // Check pilots, flight, and aircraft are loading or undefined
@@ -74,80 +94,89 @@ export default function FlightDetailsForm() {
       <section>
         <h3>Flight Details</h3>
         <form onSubmit={handleSubmit} className="form-container">
-        <div className="form-group">
-          <label>
-            Solo: 
-            <input
-              type="checkbox"
-              checked={isSoloChecked}
-              onChange={() => setIsSoloChecked(!isSoloChecked)}
-              id="solo"
+          <div className="form-group">
+            <label>
+              Solo: 
+              <input
+                type="checkbox"
+                checked={isSoloChecked}
+                onChange={() => {
+                  setIsSoloChecked(!isSoloChecked);
+                  // If Solo is checked, clear the selected SIC
+                  if (!isSoloChecked) {
+                    setSelectedSIC(null);
+                  }
+                }}
+                id="solo"
               />
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            PIC: 
-            <select value={selectedPIC} onChange={(e) => setSelectedPIC(e.target.value)} id="PIC">
-              <option value="" disabled>Select PIC</option>
+            </label>
+          </div>
+          <div className="form-group">
+            <label>
+              PIC: 
+              <select value={selectedPIC} onChange={(e) => setSelectedPIC(e.target.value)} id="PIC">
+                <option value="" disabled>Select PIC</option>
                 {pilots && pilots.map((pilot) => (
                   <option key={pilot.id} value={pilot.id}>
                     {`${pilot.firstName} ${pilot.lastName}`}
                   </option>
-                  )
-                )};
-            </select>
-          </label>
-        </div>
-          <div className="form-group">
-            <label>
-              SIC: 
-              <select value={selectedSIC} onChange={(e) => setSelectedSIC(e.target.value)} id="SIC">
-                <option value="" disabled>Select SIC</option>
+                ))}
+              </select>
+            </label>
+          </div>
+          {!isSoloChecked && (
+            <div className="form-group">
+              <label>
+                SIC: 
+                <select value={selectedSIC} onChange={(e) => setSelectedSIC(e.target.value)} id="SIC">
+                  <option value="" disabled>Select SIC</option>
                   {pilots && pilots.map((pilot) => (
                     <option key={pilot.id} value={pilot.id}>
                       {`${pilot.firstName} ${pilot.lastName}`}
                     </option>
                   ))}
-              </select>
-            </label>
-          </div>
-        <div className="form-group">
-          <label>
-            Tail Number: 
-            <select value={selectedAircraft} onChange={(e) => setSelectedAircraft(e.target.value)}>
-              <option value="" disabled>Select Aircraft</option>
+                </select>
+              </label>
+            </div>
+          )}
+          <div className="form-group">
+            <label>
+              Tail Number: 
+              <select value={selectedAircraft} onChange={(e) => setSelectedAircraft(e.target.value)}>
+                <option value="" disabled>Select Aircraft</option>
                 {aircraft && aircraft.map((ac) => (
                   <option key={ac.id} value={ac.id} id="aircraft">
                     {`${ac.tailNum}`}
                   </option>
-                  ))}
-            </select>
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            Departure: 
-            <input 
-              type="text"
-              value={departure}
-              maxLength="4"
-              onChange ={(e) => setDeparture(e.target.value)}
-              id="departure" />
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            Arrival: 
-            <input 
-              type="text"
-              value={arrival}
-              maxLength="4" 
-              onChange ={(e) => setArrival(e.target.value)}
-              id="arrival" />
-          </label>
-        </div>
-        <button type="submit">Update</button>
+                ))}
+              </select>
+            </label>
+          </div>
+          <div className="form-group">
+            <label>
+              Departure: 
+              <input 
+                type="text"
+                value={departure}
+                maxLength="4"
+                onChange={(e) => setDeparture(e.target.value)}
+                id="departure"
+              />
+            </label>
+          </div>
+          <div className="form-group">
+            <label>
+              Arrival: 
+              <input 
+                type="text"
+                value={arrival}
+                maxLength="4" 
+                onChange={(e) => setArrival(e.target.value)}
+                id="arrival"
+              />
+            </label>
+          </div>
+          <button type="submit">Update</button>
         </form>
       </section>
     </>

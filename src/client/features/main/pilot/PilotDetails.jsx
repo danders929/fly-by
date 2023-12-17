@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { selectId } from "../../auth/authSlice";
 import { useGetPilotQuery } from "./pilotSlice";
 
 export default function PilotDetails(){
   const navigate = useNavigate();
-  const usrId = useSelector(selectId);
+  const { usrId } = useParams();
   const { data: pilotData, error, isLoading } = useGetPilotQuery(usrId);
 
   useEffect(() => {

@@ -1,12 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { selectId } from "../auth/authSlice";
 import "./Home.less";
 
 export default function Home() {
   const navigate = useNavigate();
-  const id = useSelector(selectId)
   const handleNavClick = (navLink) => {
     navigate(navLink);
   }

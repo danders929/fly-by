@@ -13,7 +13,7 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const token = useSelector(selectToken);
-  const usrId = useSelector(selectId);
+  const usrId = sessionStorage.getItem('userId')
   const handleLogout = async () => {
     await dispatch(logout());
     navigate("/");

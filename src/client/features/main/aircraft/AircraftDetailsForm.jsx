@@ -38,7 +38,7 @@ export default function AircraftNewForm() {
       const result = await updateAircraft(aircraftData).unwrap();
       navigate(`/aircraft/${aircraftId}`);
     } catch (error) {
-      console.error("Error creating aircraft:", error);
+      console.error("Error updating aircraft:", error);
     }
   };
 
@@ -51,7 +51,7 @@ export default function AircraftNewForm() {
       <header>
         <p>Image PlaceHolder</p>
         <h1>Fly-By</h1>
-        <h2>New Aircraft Form</h2>
+        <h2>Aircraft Update Form</h2>
       </header>
       <form onSubmit={handleSubmit}>
         <label>
@@ -66,7 +66,7 @@ export default function AircraftNewForm() {
         <label>
           Hobbs Meter: <input type="number" value={hobbs} onChange={(e) => setHobbs(e.target.value)} />
         </label>
-        <button type="submit">Add</button>
+        <button type="submit">Update</button>
       </form>
     </>
   );

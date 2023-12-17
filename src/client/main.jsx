@@ -9,6 +9,7 @@ import Root from "./layout/Root.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthForm from "./features/auth/AuthForm.jsx";
+import NewProfile from "./features/auth/newProfile.jsx";
 import PilotDetails from "./features/main/pilot/PilotDetails.jsx";
 import PilotDetailsForm from "./features/main/pilot/PilotDetailsForm.jsx";
 import Home from "./features/main/Home.jsx"
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <AuthForm /> },
       { path: "/authForm", element: <AuthForm /> },
+      { path: "/newProfile", element: <NewProfile />},
       { path: "/pilot/:usrId", element: <PilotDetails />},
       { path: "/pilot/:usrId/update", element: <PilotDetailsForm />},
       { path: "/home", element: <Home />},

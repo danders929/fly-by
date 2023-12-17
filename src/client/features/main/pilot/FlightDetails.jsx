@@ -3,26 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { selectId } from "../../auth/authSlice";
 import { useGetFlightQueryById } from "./flightLogSlice";
-
-// const flight = {
-//   // Placeholder object for flight
-//   name: "null",
-//   aircraft: { singleEngine: false },
-//   solo: false,
-//   picId: { name: "null" },
-//   sicId: { name: "null" },
-//   date: "null",
-//   departure: "null",
-//   arrival: "null",
-// };
-
-// function checkEngineType(){
-//   if(flight.aircraft.singleEngine){
-//     return "Single Engine"
-//   } else{
-//     return "Multi-Engine"
-//   }
-// }
+import { useGetPilotQuery } from "./pilotSlice";
 
 const FlightDetails = () => {
   const navigate = useNavigate();
@@ -30,6 +11,10 @@ const FlightDetails = () => {
   const { fltId } = useParams();
 
   const { data: flight, error, isLoading } = useGetFlightQueryById(fltId);
+  // const { data: pilotData, pilotError, pilotIsLoading} = useGetPilotQuery(pilotId);
+
+  // const {picName, setPicName} = useState("");
+  // const {sicName, setSicName} = useState("");
 
   useEffect(() => {
     if (error) {
@@ -43,45 +28,46 @@ const FlightDetails = () => {
   }
 
 
-    // Calculate total flight hours
-    const calculateTotalFlightHours = () => {
-      let totalEngineHours = 0;
-      let totalHours = 0;
-      let totalSoloHours = 0;
-      let totalDayHours = 0;
-      let totalNightHours = 0;
-  
-      if (flight) {
-        if (flight.FlightTimes && flight.FlightTimes.length > 0) {
-          const engStart = new Date(flight.engineStartTime)
-          const engStop = new Date(flight.engineStopTime);
-          const engHours = (engStop - engStart) / (1000 * 60 * 60);
-          totalEngineHours += engHours;
+  // Calculate total flight hours
+  const calculateTotalFlightHours = () => {
+    let totalEngineHours = 0;
+    let totalHours = 0;
+    let totalSoloHours = 0;
+    let totalDayHours = 0;
+    let totalNightHours = 0;
 
-          flight.FlightTimes.forEach((time) => {
-            const startTime = new Date(time.timeStart);
-            const stopTime = time.timeStop ? new Date(time.timeStop) : new Date(); // Use current time if timeStop is not available
-            const duration = stopTime - startTime;
-            const hours = duration / (1000 * 60 * 60); 
-            const dayFlight = time.dayFlight;
-            totalHours += hours;
+    if (flight) {
+      if (flight.FlightTimes && flight.FlightTimes.length > 0) {
+        const engStart = new Date(flight.engineStartTime)
+        const engStop = new Date(flight.engineStopTime);
+        const engHours = (engStop - engStart) / (1000 * 60 * 60);
+        totalEngineHours += engHours;
 
-            // Check if it's a solo flight and add hours to totalSoloHours
-            if (flight.solo) {
-              totalSoloHours += hours;
-            }
-            // Check if it's a day flight or night and add hours corespondingly
-            if (dayFlight) {
-              totalDayHours += hours;
-            } else {
-              totalNightHours += hours;
-            }
-          });
-        }
+        flight.FlightTimes.forEach((time) => {
+          const startTime = new Date(time.timeStart);
+          const stopTime = time.timeStop ? new Date(time.timeStop) : new Date(); // Use current time if timeStop is not available
+          const duration = stopTime - startTime;
+          const hours = duration / (1000 * 60 * 60); 
+          const dayFlight = time.dayFlight;
+          totalHours += hours;
+
+          // Check if it's a solo flight and add hours to totalSoloHours
+          if (flight.solo) {
+            totalSoloHours += hours;
+          }
+          // Check if it's a day flight or night and add hours corespondingly
+          if (dayFlight) {
+            totalDayHours += hours;
+          } else {
+            totalNightHours += hours;
+          }
+        });
       }
-      return {totalEngineHours: totalEngineHours.toFixed(2), totalHours: totalHours.toFixed(2), day: totalDayHours.toFixed(2), night: totalNightHours.toFixed(2), solo: totalSoloHours.toFixed(2) }; // Round to two decimal places
-  
-    };
+    }
+    return {totalEngineHours: totalEngineHours.toFixed(2), totalHours: totalHours.toFixed(2), day: totalDayHours.toFixed(2), night: totalNightHours.toFixed(2), solo: totalSoloHours.toFixed(2) }; // Round to two decimal places
+
+  };
+
     // Formats the flight.date value to be MM:DD:YY
   const formatFlightDate = (flight) => {
     // Get date components
@@ -114,8 +100,9 @@ const FlightDetails = () => {
       </header>
         <h3>Flight Details</h3>
         <section>
-          <p>Pilot in Command: {flight.picId}</p>
-          <p>Second in Command: {flight.sicId}</p>
+          <p>Pilot in Command: {flight.pilots[0].firstName} {flight.pilots[0].lastName}</p>
+          <p>Second in Command: {flight.pilots[1].firstName} {flight.pilots[1].lastName}</p>
+          <p>Tail Number: {flight.aircraft.tailNum}</p>
           <p>Airport Departure: {flight.departure}</p>
           <p>Airport Arrival: {flight.arrival}</p>
         </section>
