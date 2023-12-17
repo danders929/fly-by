@@ -81,7 +81,7 @@ const FlightLog = () => {
   return (
     <>
       <header>
-        <p>Image PlaceHolder</p>
+        <img className="logo" src="/airplane.svg" alt="airplane logo" />
         <h1>Fly-By</h1>
         <h2>{pilotData ? `${pilotData.firstName}'s Flight Log` : "Loading..."}</h2>
       </header>

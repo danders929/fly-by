@@ -11,10 +11,6 @@ const FlightDetails = () => {
   const { fltId } = useParams();
 
   const { data: flight, error, isLoading } = useGetFlightQueryById(fltId);
-  // const { data: pilotData, pilotError, pilotIsLoading} = useGetPilotQuery(pilotId);
-
-  // const {picName, setPicName} = useState("");
-  // const {sicName, setSicName} = useState("");
 
   useEffect(() => {
     if (error) {
@@ -94,14 +90,16 @@ const FlightDetails = () => {
   return (
     <>
       <header>
-        <p>Image PlaceHolder</p>
+        <img className="logo" src="/airplane.svg" alt="airplane logo" />
         <h1>Fly-By</h1>
         <h2>Flight: {flight && formatFlightDate(flight)}</h2>
       </header>
         <h3>Flight Details</h3>
         <section>
           <p>Pilot in Command: {flight.pilots[0].firstName} {flight.pilots[0].lastName}</p>
+          {flight.pilots[1] ?
           <p>Second in Command: {flight.pilots[1].firstName} {flight.pilots[1].lastName}</p>
+          : ''}
           <p>Tail Number: {flight.aircraft.tailNum}</p>
           <p>Airport Departure: {flight.departure}</p>
           <p>Airport Arrival: {flight.arrival}</p>
