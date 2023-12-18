@@ -19,21 +19,25 @@ export default function AircraftList(){
   return (
     <>
       <header>
-        <p>Image PlaceHolder</p>
+        <img className="logo" src="/airplane.svg" alt="airplane logo" />
         <h1>Fly-By</h1>
         <h2>Aircraft List</h2>
       </header>
-      <button onClick={() => handleNavClick("/aircraft/new_form")}>Add Aircraft</button>
-      <ul>
-      {isLoading && <div>Loading...</div>}
-      {!isLoading && (!aircraft || aircraft.length === 0) && <div>No flights found</div>}
-      {!isLoading && aircraft && aircraft.map((singleAircraft) => (
-        <li key={singleAircraft.id}>
-        {singleAircraft.tailNum} {singleAircraft.makeModel}
-          <span>  <Link to={`/aircraft/${singleAircraft.id}`}>Details</Link></span>
-        </li>
-      ))}
-      </ul>
+      <section className="flight-list">
+        <ul>
+        {isLoading && <div>Loading...</div>}
+        {!isLoading && (!aircraft || aircraft.length === 0) && <div>No flights found</div>}
+        {!isLoading && aircraft && aircraft.map((singleAircraft) => (
+          <li key={singleAircraft.id}>
+          {singleAircraft.tailNum} {singleAircraft.makeModel}
+            <span>  <Link to={`/aircraft/${singleAircraft.id}`}>Details</Link></span>
+          </li>
+        ))}
+        </ul>
+      </section>
+      <div className="button-container">
+        <button onClick={() => handleNavClick("/aircraft/new_form")}>Add Aircraft</button>
+      </div>
     </>
   )
 }

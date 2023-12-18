@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation, useRegisterMutation } from "./authSlice";
 
-
 /** This form allows users to register or log in. */
 export default function AuthForm() {
   const navigate = useNavigate();
@@ -53,7 +52,7 @@ export default function AuthForm() {
         <h1>Fly-By</h1>
         <h2>{authAction}</h2>
       </header>
-      <form onSubmit={attemptAuth}>
+      <form onSubmit={attemptAuth} className="form-container">
         <label>
           Email:
           <input
@@ -75,8 +74,11 @@ export default function AuthForm() {
             id="password"
           />
         </label>
-        <button>{authAction}</button>
+        <div className="button-container">
+          <button>{authAction}</button>
+        </div>
       </form>
+      <br />
       <a onClick={() => setIsLogin(!isLogin)}>{altCopy}</a>
 
       {(loginLoading || registerLoading) && <p>Please wait...</p>}

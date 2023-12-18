@@ -263,23 +263,23 @@ export default function Flight(){
         <button onClick={() => handleWheelsUpClick()}>Wheels Up</button>
         <button onClick={() => handleWheelsDownClick()}>Wheels Down</button>
       </section>
-      <section className="flight-data">
-        <table>
+      <section className="flight-data-container">
+        <table className ="flight-hours">
           <tbody>
             <tr>
-              <td>Engine Runtime</td>
-              <td>{totalFlightHours.totalEngineHours}hrs</td>
+              <td className="description">Engine Runtime:  </td>
+              <td>{totalFlightHours.totalEngineHours}hrs  </td>
             </tr>
             <tr>
-              <td>Total Flight Time</td>
+              <td className="description">Total Flight Time:  </td>
               <td>{totalFlightHours.totalHours}hrs</td>
             </tr>
             <tr>
-              <td>Day Flight Hours</td>
+              <td className="description">Day Flight Hours:  </td>
               <td>{totalFlightHours.day}hrs</td>
             </tr>
             <tr>
-              <td>Night Flight Hours</td>
+              <td className="description">Night Flight Hours:</td>
               <td>{totalFlightHours.night}hrs</td>
             </tr>
           </tbody>
@@ -287,15 +287,15 @@ export default function Flight(){
         <table className="flight-status">
           <tbody>
             <tr>
-              <td> Engine Status: </td>
+              <td className="description">Engine Status:</td>
               <td>{!flight?.engineStopTime ? "Running" : ""}</td>
             </tr>
             <tr>
-              <td> Lighting Condition: </td>
+              <td className="description">Lighting Condition:</td>
               <td>{isDayFlight ? "Day" : "Night"}</td>
             </tr>
             <tr>
-              <td> Flight Status: </td>
+              <td className="description">Flight Status:</td>
               <td>{isAirborne ? "In-Flight" : "Landed"}</td>
             </tr>
           </tbody>

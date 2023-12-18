@@ -47,7 +47,7 @@ export default function PilotDetailsForm(){
         <h2>Account Details</h2>
       </header>
       <section>
-        <form onSubmit={handleSubmit}>
+        <form className="form-container" onSubmit={handleSubmit}>
           <label>
             First Name
             <input
@@ -64,7 +64,9 @@ export default function PilotDetailsForm(){
               onChange={(e) => setLastName(e.target.value)}>
             </input>
           </label>
-          <button>Update</button>
+          <div className="button-container">
+            <button>Update</button>
+          </div>
         </form>
       </section>
     </>

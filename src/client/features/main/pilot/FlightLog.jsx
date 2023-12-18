@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useGetFlightQuery } from "./flightLogSlice"; 
 import { useGetPilotQuery } from "./pilotSlice";
@@ -6,6 +6,8 @@ import { useGetPilotQuery } from "./pilotSlice";
 const FlightLog = () => {
   const usrId = sessionStorage.getItem('userId');
   const pilotId = sessionStorage.getItem('pilotId')
+  const [lastFlightName, setLastFlightName] = useState("");
+  let flightNumber = 0;
   
   // queries the api for flights
   const { data: flights, error: flightError, isLoading: isFlightLoading } = useGetFlightQuery(pilotId);
@@ -67,13 +69,18 @@ const FlightLog = () => {
     const month = String(flightDate.getMonth() + 1).padStart(2, "0");
     const day = String(flightDate.getDate()).padStart(2, "0");
     const year = String(flightDate.getFullYear()).slice(2);
-
     // Create the formatted date string (MM/DD/YY)
     const formattedDate = `${month}/${day}/${year}`;
 
     // Create the formatted date string with flight number (MM/DD/YY:N)
-    const formattedWithNumber = `${formattedDate}`;
-  
+    if (formattedDate === lastFlightName) {
+      setLastFlightName(formattedDate);
+      const formattedWithNumber = `${formattedDate}: ${flightNumber}`;
+      flightNumber +=1;
+      return formattedWithNumber;
+    }
+    flightNumber += 1;
+    const formattedWithNumber = `${formattedDate}: ${flightNumber}`;
     return formattedWithNumber;
   };
   
@@ -85,15 +92,15 @@ const FlightLog = () => {
         <h1>Fly-By</h1>
         <h2>{pilotData ? `${pilotData.firstName}'s Flight Log` : "Loading..."}</h2>
       </header>
-      <section>
-        <h2>Flight Hours</h2>
+      <section className="details">
+        <h3>Flight Hours</h3>
         <p>Total Flight: {totalFlightHours.total}hrs</p>
         <p>Day Flight: {totalFlightHours.day}hrs</p>
         <p>Night Flight: {totalFlightHours.night}hrs</p>
         <p>Solo Flight: {totalFlightHours.solo}hrs</p>
       </section>
       <br />
-      <section>
+      <section className="flight-list">
         <ul>
           {isLoading && <div>Loading...</div>}
           {!isLoading && (!flights || flights.length === 0) && <div>No flights found</div>}

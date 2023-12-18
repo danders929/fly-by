@@ -27,12 +27,14 @@ export default function PilotDetails(){
         <h1>Fly-By</h1>
         <h2>Account Details</h2>
       </header>
-      <section>
+      <section className="details">
         <p>First Name: {pilotData ? `${pilotData.firstName}` : "Loading..."}</p>
         <p>Last Name: {pilotData ? `${pilotData.lastName}` : "Loading..."}</p>
         <p>Email Address: {pilotData ? `${pilotData.user.email}` : "Loading..."}</p>
       </section>
-      <button onClick={() => handleNavClick(`/pilot/${usrId}/update`)}>Edit</button>
+      <div className="button-container">
+        <button onClick={() => handleNavClick(`/pilot/${usrId}/update`)}>Edit</button>
+      </div>
     </>
   )
 }
