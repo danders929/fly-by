@@ -22,13 +22,11 @@ const createApp = async () => {
 
   // API routes
   app.use("/api", require("./api"));
-  app.use("/api/auth", require("./api/auth/index.js"))
+  app.use("/api/auth", require("./api/auth/index.js"));
   app.use("/api/pilots", require("./api/pilots"));
   app.use("/api/aircraft", require("./api/aircraft"));
   app.use("/api/flights", require("./api/flights"));
   app.use("/api/flightTimes", require("./api/flightTimes"));
-
-  
 
   // Serve static HTML in production & Vite dev server in development
   if (process.env.NODE_ENV === "production") {

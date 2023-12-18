@@ -7,7 +7,7 @@ export default function Home() {
   const navigate = useNavigate();
   const handleNavClick = (navLink) => {
     navigate(navLink);
-  }
+  };
 
   return (
     <>
@@ -18,7 +18,9 @@ export default function Home() {
       </header>
       <section className="homeButtons">
         <button onClick={() => handleNavClick("/new_log")}>New Flight</button>
-        <button onClick={() => handleNavClick(`/flight_log`)}>Flight Log</button>
+        <button onClick={() => handleNavClick(`/flight_log`)}>
+          Flight Log
+        </button>
         <button onClick={() => handleNavClick("/aircraft")}>Aircraft</button>
       </section>
     </>

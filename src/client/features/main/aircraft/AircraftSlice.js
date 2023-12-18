@@ -5,14 +5,14 @@ const aircraftApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getAircraftById: builder.query({
       query: (aircraftId) => ({
-        url: `/aircraft/${aircraftId}`
+        url: `/aircraft/${aircraftId}`,
       }),
       providesTags: ["Aircraft"],
     }),
 
     getAircraft: builder.query({
       query: () => ({
-        url: `/aircraft/`
+        url: `/aircraft/`,
       }),
       providesTags: ["Aircraft"],
     }),
@@ -36,10 +36,13 @@ const aircraftApi = api.injectEndpoints({
   }),
 });
 
-export const useGetAircraftByIdQuery = aircraftApi.endpoints.getAircraftById.useQuery;
+export const useGetAircraftByIdQuery =
+  aircraftApi.endpoints.getAircraftById.useQuery;
 export const useGetAircraftQuery = aircraftApi.endpoints.getAircraft.useQuery;
-export const useCreateAircraft = aircraftApi.endpoints.createAircraft.useMutation;
-export const useUpdateAircraft = aircraftApi.endpoints.updateAircraft.useMutation;
+export const useCreateAircraft =
+  aircraftApi.endpoints.createAircraft.useMutation;
+export const useUpdateAircraft =
+  aircraftApi.endpoints.updateAircraft.useMutation;
 
 const aircraftSlice = createSlice({
   name: "aircraft",
@@ -48,8 +51,7 @@ const aircraftSlice = createSlice({
     makeModel: "",
     tailNum: "",
     singleEngine: null,
-    hobbs: 0.00,
-
+    hobbs: 0.0,
   },
   reducers: {
     setId: (state, action) => {
@@ -76,17 +78,23 @@ const aircraftSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(aircraftApi.endpoints.getAircraft.matchFulfilled, (state, action) => {
-      state.id = action.payload.id
-      state.makeModel = action.payload.makeModel;
-      state.tailNum = action.payload.tailNum;
-    });
-    builder.addMatcher(aircraftApi.endpoints.getAircraftById.matchFulfilled, (state, action) => {
-      state.id = action.payload.id
-      state.makeModel = action.payload.makeModel;
-      state.tailNum = action.payload.tailNum;
-      state.singleEngine = action.payload.singleEngine;
-      state.hobbs = action.payload.hobbs;
-    });
+    builder.addMatcher(
+      aircraftApi.endpoints.getAircraft.matchFulfilled,
+      (state, action) => {
+        state.id = action.payload.id;
+        state.makeModel = action.payload.makeModel;
+        state.tailNum = action.payload.tailNum;
+      }
+    );
+    builder.addMatcher(
+      aircraftApi.endpoints.getAircraftById.matchFulfilled,
+      (state, action) => {
+        state.id = action.payload.id;
+        state.makeModel = action.payload.makeModel;
+        state.tailNum = action.payload.tailNum;
+        state.singleEngine = action.payload.singleEngine;
+        state.hobbs = action.payload.hobbs;
+      }
+    );
   },
 });

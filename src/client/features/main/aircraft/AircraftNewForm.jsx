@@ -20,7 +20,7 @@ export default function AircraftNewForm() {
         makeModel,
         tailNum,
         singleEngine,
-        "hobbs": hobbsFloat,
+        hobbs: hobbsFloat,
       };
 
       const result = await createAircraft(newAircraftData).unwrap();
@@ -42,18 +42,38 @@ export default function AircraftNewForm() {
         <h1>Fly-By</h1>
         <h2>New Aircraft Form</h2>
       </header>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="form-container">
         <label>
-          Tail Number: <input type="text" value={tailNum} onChange={(e) => setTailNum(e.target.value)} />
+          Tail Number:{" "}
+          <input
+            type="text"
+            value={tailNum}
+            onChange={(e) => setTailNum(e.target.value)}
+          />
         </label>
         <label>
-          Make/Model: <input type="text" value={makeModel} onChange={(e) => setMakeModel(e.target.value)} />
+          Make/Model:{" "}
+          <input
+            type="text"
+            value={makeModel}
+            onChange={(e) => setMakeModel(e.target.value)}
+          />
         </label>
         <label>
-          Single Engine: <input type="checkbox" checked={singleEngine} onChange={() => setSingleEngine(!singleEngine)} />
+          Single Engine:{" "}
+          <input
+            type="checkbox"
+            checked={singleEngine}
+            onChange={() => setSingleEngine(!singleEngine)}
+          />
         </label>
         <label>
-          Hobbs Meter: <input type="number" value={hobbs} onChange={(e) => setHobbs(e.target.value)} />
+          Hobbs Meter:{" "}
+          <input
+            type="number"
+            value={hobbs}
+            onChange={(e) => setHobbs(e.target.value)}
+          />
         </label>
         <button type="submit">Add</button>
       </form>

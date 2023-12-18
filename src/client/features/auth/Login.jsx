@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Login(){
+export default function Login() {
   const navigate = useNavigate;
 
   const [email, setEmail] = useState();
@@ -17,7 +17,7 @@ export default function Login(){
     } catch (err) {
       console.error(err);
     }
-  }
+  };
   return (
     <>
       <header>
@@ -33,8 +33,7 @@ export default function Login(){
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
-            >
-            </input>
+            ></input>
           </label>
           <label>
             Password:
@@ -43,13 +42,12 @@ export default function Login(){
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
-              >
-            </input>
+            ></input>
           </label>
-            <button>SIGN IN</button>
+          <button>SIGN IN</button>
           <button>SIGN UP</button>
         </form>
       </section>
     </>
-  )
+  );
 }

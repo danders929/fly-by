@@ -11,10 +11,7 @@ router.get("/", async (req, res, next) => {
     if (usrId) {
       flights = await prisma.flight.findMany({
         where: {
-          OR: [
-            { picId: usrId },
-            { sicId: usrId },
-          ],
+          OR: [{ picId: usrId }, { sicId: usrId }],
         },
         include: {
           FlightTimes: true,
@@ -64,12 +61,22 @@ router.get("/:id", async (req, res, next) => {
 // /api/flights - POST, create a new flight
 router.post("/", async (req, res, next) => {
   try {
-    
-    const { solo, picId, sicId, aircraftId, date, departure, arrival, engineStartTime, pilots} = req.body;
+    const {
+      solo,
+      picId,
+      sicId,
+      aircraftId,
+      date,
+      departure,
+      arrival,
+      engineStartTime,
+      pilots,
+    } = req.body;
     if (!picId || !aircraftId || !departure || !arrival) {
       const error = {
         status: 400,
-        message: "picId, aircraftId, Departure, and Arrival fields are required.",
+        message:
+          "picId, aircraftId, Departure, and Arrival fields are required.",
       };
       return next(error);
     }
@@ -83,7 +90,7 @@ router.post("/", async (req, res, next) => {
         departure,
         arrival,
         engineStartTime,
-        pilots
+        pilots,
       },
     });
     res.json(newFlight);
@@ -97,7 +104,16 @@ router.patch("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
 
-    const { solo, picId, sicId, aircraftId, departure, arrival, engineStopTime, pilots } = req.body;
+    const {
+      solo,
+      picId,
+      sicId,
+      aircraftId,
+      departure,
+      arrival,
+      engineStopTime,
+      pilots,
+    } = req.body;
 
     const updateFlight = await prisma.flight.update({
       where: { id: id },

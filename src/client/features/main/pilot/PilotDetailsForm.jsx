@@ -1,18 +1,21 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetPilotQuery, useUpdatePilot } from "./pilotSlice";
 
-export default function PilotDetailsForm(){
+export default function PilotDetailsForm() {
   const navigate = useNavigate();
   const { usrId } = useParams();
-  const pilotId = sessionStorage.getItem("pilotId")
+  const pilotId = sessionStorage.getItem("pilotId");
 
   const { data: pilotData, error, isLoading } = useGetPilotQuery(usrId);
-  const [ updatePilot, { updatePilotError, updatePilotLoading}] = useUpdatePilot(pilotId);
+  const [updatePilot, { updatePilotError, updatePilotLoading }] =
+    useUpdatePilot(pilotId);
 
-  const [firstName, setFirstName] = useState(sessionStorage.getItem('firstName'));
-  const [lastName, setLastName] = useState (sessionStorage.getItem('lastName'));
+  const [firstName, setFirstName] = useState(
+    sessionStorage.getItem("firstName")
+  );
+  const [lastName, setLastName] = useState(sessionStorage.getItem("lastName"));
 
   useEffect(() => {
     if (error) {
@@ -27,15 +30,15 @@ export default function PilotDetailsForm(){
     event.preventDefault();
     try {
       const updatedPilotData = {
-        "id": Number(pilotId),
+        id: Number(pilotId),
         firstName,
-        lastName,  
+        lastName,
       };
 
       const result = await updatePilot(updatedPilotData);
       navigate(`/pilot/${usrId}`);
     } catch (error) {
-      console.error("Error updating pilot data")
+      console.error("Error updating pilot data");
     }
   };
 
@@ -53,16 +56,16 @@ export default function PilotDetailsForm(){
             <input
               type="text"
               value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}>
-            </input>
+              onChange={(e) => setFirstName(e.target.value)}
+            ></input>
           </label>
           <label>
             Last Name
             <input
               type="text"
               value={lastName}
-              onChange={(e) => setLastName(e.target.value)}>
-            </input>
+              onChange={(e) => setLastName(e.target.value)}
+            ></input>
           </label>
           <div className="button-container">
             <button>Update</button>
@@ -70,5 +73,5 @@ export default function PilotDetailsForm(){
         </form>
       </section>
     </>
-  )
+  );
 }

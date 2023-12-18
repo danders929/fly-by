@@ -68,7 +68,7 @@ router.patch("/:id", async (req, res, next) => {
     const updateFlightTime = await prisma.flightTime.update({
       where: { id: id },
       data: {
-        timeStop
+        timeStop,
       },
     });
 

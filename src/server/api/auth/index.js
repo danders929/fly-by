@@ -33,7 +33,7 @@ router.post("/register", async (req, res, next) => {
 
     const token = jwt.sign({ id: newUser.id });
     const userId = newUser.id;
-    res.json({ token, userId});
+    res.json({ token, userId });
   } catch (err) {
     next(err);
   }

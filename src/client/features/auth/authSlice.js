@@ -29,12 +29,12 @@ export const { useRegisterMutation, useLoginMutation } = authApi;
 
 /** Session storage key for auth token */
 const TOKEN_KEY = "token";
-const USER_ID = "userId"
+const USER_ID = "userId";
 
 /** Reducer that stores payload's token in state and session storage */
 const storeToken = (state, { payload }) => {
   state.token = payload.token;
-  state.userId = payload.id
+  state.userId = payload.id;
   sessionStorage.setItem(TOKEN_KEY, payload.token);
   sessionStorage.setItem(USER_ID, payload.userId);
 };

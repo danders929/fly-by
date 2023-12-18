@@ -3,7 +3,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Register(){
+export default function Register() {
   const navigate = useNavigate;
   return (
     <>
@@ -16,40 +16,31 @@ export default function Register(){
         <form>
           <label>
             First Name
-            <input
-              type="text">
-            </input>
+            <input type="text"></input>
           </label>
           <label>
             Last Name
-            <input
-              type="text">
-            </input>
-          </label>   
+            <input type="text"></input>
+          </label>
           <label>
             E-mail
             <input
               type="email"
               // value={email}
               // onChange={(e) => setEmail(e.target.value)}
-            >
-            </input>
+            ></input>
           </label>
           <label>
             Password:
-            <input
-              type="password">
-            </input>
+            <input type="password"></input>
           </label>
           <label>
             Re-Type Password:
-            <input
-              type="password">
-            </input>
+            <input type="password"></input>
           </label>
           <button>Register</button>
         </form>
       </body>
     </>
-  )
+  );
 }

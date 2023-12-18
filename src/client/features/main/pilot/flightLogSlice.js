@@ -26,7 +26,7 @@ export const flightLogApi = api.injectEndpoints({
         // Assuming the error response contains the error details in response.data
         throw new Error(response.data.message || "Failed to create flight");
       },
-    }),    
+    }),
     updateFlight: builder.mutation({
       query: (flightData) => ({
         url: `/flights/${flightData.id}`,
@@ -77,7 +77,18 @@ const flightLogSlice = createSlice({
     },
     updateFlightData: (
       state,
-      { payload: { flightId, solo, picId, sicId, aircraftId, departure, arrival, engineStopTime } }
+      {
+        payload: {
+          flightId,
+          solo,
+          picId,
+          sicId,
+          aircraftId,
+          departure,
+          arrival,
+          engineStopTime,
+        },
+      }
     ) => {
       return {
         type: "updateFlightData",
@@ -101,7 +112,7 @@ const flightLogSlice = createSlice({
         state.flights = action.payload;
       }
     );
-    
+
     builder.addMatcher(
       flightLogApi.endpoints.getflight.matchFulfilled,
       (state, action) => {

@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { selectId } from "../../auth/authSlice";
 import { useGetPilotQuery } from "./pilotSlice";
 
-export default function PilotDetails(){
+export default function PilotDetails() {
   const navigate = useNavigate();
   const { usrId } = useParams();
   const { data: pilotData, error, isLoading } = useGetPilotQuery(usrId);
@@ -18,7 +18,7 @@ export default function PilotDetails(){
 
   const handleNavClick = (navLink) => {
     navigate(navLink);
-  }
+  };
 
   return (
     <>
@@ -30,11 +30,15 @@ export default function PilotDetails(){
       <section className="details">
         <p>First Name: {pilotData ? `${pilotData.firstName}` : "Loading..."}</p>
         <p>Last Name: {pilotData ? `${pilotData.lastName}` : "Loading..."}</p>
-        <p>Email Address: {pilotData ? `${pilotData.user.email}` : "Loading..."}</p>
+        <p>
+          Email Address: {pilotData ? `${pilotData.user.email}` : "Loading..."}
+        </p>
       </section>
       <div className="button-container">
-        <button onClick={() => handleNavClick(`/pilot/${usrId}/update`)}>Edit</button>
+        <button onClick={() => handleNavClick(`/pilot/${usrId}/update`)}>
+          Edit
+        </button>
       </div>
     </>
-  )
+  );
 }

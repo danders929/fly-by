@@ -89,25 +89,23 @@ router.patch("/:aircraftId", async (req, res, next) => {
   }
 });
 
-// Currently not in use. May implement later.
-//
 // /api/aircraft/:id - DELETE, deletes a aircraft by id number
-// router.delete("/:id", async (req, res, next) => {
-//   try {
-//     const id = +req.params.id;
-//     const result = await prisma.aircraft.delete({
-//       where: {
-//         id: id,
-//       },
-//     });
-//     if (!result) {
-//       return next({
-//         status: 404,
-//         message: `Could not find aircraft with id ${id}`,
-//       });
-//     }
-//     res.json(result);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const id = +req.params.id;
+    const result = await prisma.aircraft.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (!result) {
+      return next({
+        status: 404,
+        message: `Could not find aircraft with id ${id}`,
+      });
+    }
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+});

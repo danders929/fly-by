@@ -1,23 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useGetFlightQuery } from "./flightLogSlice"; 
+import { useGetFlightQuery } from "./flightLogSlice";
 import { useGetPilotQuery } from "./pilotSlice";
 
 const FlightLog = () => {
-  const usrId = sessionStorage.getItem('userId');
-  const pilotId = sessionStorage.getItem('pilotId')
+  const usrId = sessionStorage.getItem("userId");
+  const pilotId = sessionStorage.getItem("pilotId");
   const [lastFlightName, setLastFlightName] = useState("");
   let flightNumber = 0;
-  
+
   // queries the api for flights
-  const { data: flights, error: flightError, isLoading: isFlightLoading } = useGetFlightQuery(pilotId);
+  const {
+    data: flights,
+    error: flightError,
+    isLoading: isFlightLoading,
+  } = useGetFlightQuery(pilotId);
 
   // queries the api for pilot's first name and assigns it to pilotName
-  const { data: pilotData, error: pilotError, isLoading: isPilotLoading } = useGetPilotQuery(usrId);
+  const {
+    data: pilotData,
+    error: pilotError,
+    isLoading: isPilotLoading,
+  } = useGetPilotQuery(usrId);
 
   const isLoading = isFlightLoading || isPilotLoading;
 
-  useEffect(() => {    
+  useEffect(() => {
     if (flightError) {
       console.error("Error fetching flight data:", flightError);
     }
@@ -38,9 +46,11 @@ const FlightLog = () => {
         if (flight.FlightTimes && flight.FlightTimes.length > 0) {
           flight.FlightTimes.forEach((time) => {
             const startTime = new Date(time.timeStart);
-            const stopTime = time.timeStop ? new Date(time.timeStop) : new Date(); // Use current time if timeStop is not available
+            const stopTime = time.timeStop
+              ? new Date(time.timeStop)
+              : new Date(); // Use current time if timeStop is not available
             const duration = stopTime - startTime;
-            const hours = duration / (1000 * 60 * 60); 
+            const hours = duration / (1000 * 60 * 60);
             const dayFlight = time.dayFlight;
             totalHours += hours;
 
@@ -59,9 +69,14 @@ const FlightLog = () => {
       });
     }
 
-    return { total: totalHours.toFixed(2), day: totalDayHours.toFixed(2), night: totalNightHours.toFixed(2), solo: totalSoloHours.toFixed(2) }; // Round to two decimal places
+    return {
+      total: totalHours.toFixed(2),
+      day: totalDayHours.toFixed(2),
+      night: totalNightHours.toFixed(2),
+      solo: totalSoloHours.toFixed(2),
+    }; // Round to two decimal places
   };
-  
+
   // Formats the flight.date value to be MM:DD:YY
   const formatFlightDate = (flight) => {
     // Get date components
@@ -76,21 +91,23 @@ const FlightLog = () => {
     if (formattedDate === lastFlightName) {
       setLastFlightName(formattedDate);
       const formattedWithNumber = `${formattedDate}: ${flightNumber}`;
-      flightNumber +=1;
+      flightNumber += 1;
       return formattedWithNumber;
     }
     flightNumber += 1;
     const formattedWithNumber = `${formattedDate}: ${flightNumber}`;
     return formattedWithNumber;
   };
-  
+
   const totalFlightHours = calculateTotalFlightHours();
   return (
     <>
       <header>
         <img className="logo" src="/airplane.svg" alt="airplane logo" />
         <h1>Fly-By</h1>
-        <h2>{pilotData ? `${pilotData.firstName}'s Flight Log` : "Loading..."}</h2>
+        <h2>
+          {pilotData ? `${pilotData.firstName}'s Flight Log` : "Loading..."}
+        </h2>
       </header>
       <section className="details">
         <h3>Flight Hours</h3>
@@ -101,14 +118,21 @@ const FlightLog = () => {
       </section>
       <br />
       <section className="flight-list">
+        <h3>Flight List</h3>
         <ul>
           {isLoading && <div>Loading...</div>}
-          {!isLoading && (!flights || flights.length === 0) && <div>No flights found</div>}
-          {!isLoading && flights && flights.map((flight) => (
+          {!isLoading && (!flights || flights.length === 0) && (
+            <div>No flights found</div>
+          )}
+          {!isLoading &&
+            flights &&
+            flights.map((flight) => (
               <li key={flight.id}>
                 {formatFlightDate(flight)}
                 <span>
-                  <Link to={`/pilot/${usrId}/flight_log/${flight.id}`}>Details</Link>
+                  <Link to={`/pilot/${usrId}/flight_log/${flight.id}`}>
+                    Details
+                  </Link>
                 </span>
               </li>
             ))}

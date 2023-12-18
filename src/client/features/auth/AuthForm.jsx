@@ -28,14 +28,14 @@ export default function AuthForm() {
     evt.preventDefault();
 
     const credentials = { email, password };
-    
+
     // We don't want to navigate if there's an error.
     // `unwrap` will throw an error if there is one
     // so we can use a try/catch to handle it.
     try {
-      if (!isLogin){
+      if (!isLogin) {
         await register(credentials).unwrap();
-        navigate(`/newProfile`)
+        navigate(`/newProfile`);
       } else {
         await login(credentials).unwrap();
         navigate(`/home`);

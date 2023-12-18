@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import api from "../../../store/api";
 
 const pilotApi = api.injectEndpoints({
-  
   endpoints: (builder) => ({
     getPilotList: builder.query({
       query: () => `/pilots/`,
@@ -34,15 +33,12 @@ const pilotApi = api.injectEndpoints({
 });
 
 export const useCreatePilot = pilotApi.endpoints.createPilot.useMutation;
-export const   useUpdatePilot = pilotApi.endpoints.updatePilot.useMutation;
-export const {
-  useGetPilotListQuery,
-  useGetPilotQuery,
-} = pilotApi;
+export const useUpdatePilot = pilotApi.endpoints.updatePilot.useMutation;
+export const { useGetPilotListQuery, useGetPilotQuery } = pilotApi;
 
 //** Session storage key for firstName and pilotId */
 const FIRST_NAME = "firstName";
-const LAST_NAME = "lastName"
+const LAST_NAME = "lastName";
 const PILOT_ID = "pilotId";
 
 //** Reducer that stores payloads FirstName, and pilotId */
@@ -51,9 +47,9 @@ const storePilotDetails = (state, { payload }) => {
   state.lastName = payload.lastName;
   state.pilotId = payload.id;
   sessionStorage.setItem(FIRST_NAME, payload.firstName);
-  sessionStorage.setItem(LAST_NAME, payload.lastName)
+  sessionStorage.setItem(LAST_NAME, payload.lastName);
   sessionStorage.setItem(PILOT_ID, payload.id);
-}
+};
 
 const pilotSlice = createSlice({
   name: "pilot",
@@ -80,7 +76,10 @@ const pilotSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(pilotApi.endpoints.getPilot.matchFulfilled, storePilotDetails);
+    builder.addMatcher(
+      pilotApi.endpoints.getPilot.matchFulfilled,
+      storePilotDetails
+    );
   },
 });
 

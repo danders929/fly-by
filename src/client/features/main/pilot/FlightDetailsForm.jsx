@@ -1,4 +1,4 @@
-import React, { useState, useEffect }from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetFlightQueryById, useUpdateFlight } from "./flightLogSlice";
 import { useGetPilotListQuery } from "./pilotSlice";
@@ -8,27 +8,46 @@ export default function FlightDetailsForm() {
   const navigate = useNavigate();
   const { usrId, fltId } = useParams();
 
-  const { data: pilots, error: pilotsError, isLoading: isPilotsLoading } = useGetPilotListQuery();
-  const { data: flight, flightError, isFlightLoading } = useGetFlightQueryById(fltId);
-  const { data: aircraft, error: aircraftError, isLoading: isAircraftLoading } = useGetAircraftQuery();
-  const [updateFlight, {isLoading: updateFlightLoading, error: updateFlightError}] = useUpdateFlight(fltId);
-  
-  const isLoading = isPilotsLoading || isFlightLoading || isAircraftLoading || updateFlightLoading;
+  const {
+    data: pilots,
+    error: pilotsError,
+    isLoading: isPilotsLoading,
+  } = useGetPilotListQuery();
+  const {
+    data: flight,
+    flightError,
+    isFlightLoading,
+  } = useGetFlightQueryById(fltId);
+  const {
+    data: aircraft,
+    error: aircraftError,
+    isLoading: isAircraftLoading,
+  } = useGetAircraftQuery();
+  const [
+    updateFlight,
+    { isLoading: updateFlightLoading, error: updateFlightError },
+  ] = useUpdateFlight(fltId);
+
+  const isLoading =
+    isPilotsLoading ||
+    isFlightLoading ||
+    isAircraftLoading ||
+    updateFlightLoading;
 
   useEffect(() => {
     if (pilotsError) {
       console.error("Error fetching Pilot List:", pilotsError);
     }
     if (flightError) {
-      console.error("Error fetching flight data:", flightError)
+      console.error("Error fetching flight data:", flightError);
     }
     if (aircraftError) {
-      console.error("Error loading aircraft data:", aircraftError)
+      console.error("Error loading aircraft data:", aircraftError);
     }
-    if (updateFlightError){
-      console.error("Error updating flight data")
+    if (updateFlightError) {
+      console.error("Error updating flight data");
     }
-  }, [ pilotsError, flightError, aircraftError, updateFlightError]);
+  }, [pilotsError, flightError, aircraftError, updateFlightError]);
 
   // Formats the flight.date value to be MM:DD:YY
   const formatFlightDate = (flight) => {
@@ -43,7 +62,7 @@ export default function FlightDetailsForm() {
 
     // Create the formatted date string with flight number (MM/DD/YY:N)
     const formattedWithNumber = `${formattedDate}`;
-  
+
     return formattedWithNumber;
   };
 
@@ -59,20 +78,20 @@ export default function FlightDetailsForm() {
     event.preventDefault();
     try {
       const updatedFlightData = {
-        "id": Number(fltId),
-        "solo": isSoloChecked,
-        "picId": Number(selectedPIC),
-        "sicId": isSoloChecked ? null : Number(selectedSIC),
-        "aircraftId": Number(selectedAircraft),
-        "departure": departure,
-        "arrival": arrival,
-        "pilots": {
-          "connect": [
-            { "id": Number(selectedPIC) },
-            ...(isSoloChecked ? [] : [{ "id": Number(selectedSIC) }])
-          ]
-        }
-      }
+        id: Number(fltId),
+        solo: isSoloChecked,
+        picId: Number(selectedPIC),
+        sicId: isSoloChecked ? null : Number(selectedSIC),
+        aircraftId: Number(selectedAircraft),
+        departure: departure,
+        arrival: arrival,
+        pilots: {
+          connect: [
+            { id: Number(selectedPIC) },
+            ...(isSoloChecked ? [] : [{ id: Number(selectedSIC) }]),
+          ],
+        },
+      };
       const result = await updateFlight(updatedFlightData);
       navigate(`/pilot/${usrId}/flight_log/${fltId}`);
     } catch (error) {
@@ -92,11 +111,12 @@ export default function FlightDetailsForm() {
         <h2>Flight: {flight && formatFlightDate(flight)}</h2>
       </header>
       <section>
-        <h3>Flight Details</h3>
+        
         <form onSubmit={handleSubmit} className="form-container">
+          <h3>Flight Details</h3>
           <div className="form-group">
             <label>
-              Solo: 
+              Solo:
               <input
                 type="checkbox"
                 checked={isSoloChecked}
@@ -113,49 +133,69 @@ export default function FlightDetailsForm() {
           </div>
           <div className="form-group">
             <label>
-              PIC: 
-              <select value={selectedPIC} onChange={(e) => setSelectedPIC(e.target.value)} id="PIC">
-                <option value="" disabled>Select PIC</option>
-                {pilots && pilots.map((pilot) => (
-                  <option key={pilot.id} value={pilot.id}>
-                    {`${pilot.firstName} ${pilot.lastName}`}
-                  </option>
-                ))}
+              PIC:
+              <select
+                value={selectedPIC}
+                onChange={(e) => setSelectedPIC(e.target.value)}
+                id="PIC"
+              >
+                <option value="" disabled>
+                  Select PIC
+                </option>
+                {pilots &&
+                  pilots.map((pilot) => (
+                    <option key={pilot.id} value={pilot.id}>
+                      {`${pilot.firstName} ${pilot.lastName}`}
+                    </option>
+                  ))}
               </select>
             </label>
           </div>
           {!isSoloChecked && (
             <div className="form-group">
               <label>
-                SIC: 
-                <select value={selectedSIC} onChange={(e) => setSelectedSIC(e.target.value)} id="SIC">
-                  <option value="" disabled>Select SIC</option>
-                  {pilots && pilots.map((pilot) => (
-                    <option key={pilot.id} value={pilot.id}>
-                      {`${pilot.firstName} ${pilot.lastName}`}
-                    </option>
-                  ))}
+                SIC:
+                <select
+                  value={selectedSIC}
+                  onChange={(e) => setSelectedSIC(e.target.value)}
+                  id="SIC"
+                >
+                  <option value="" disabled>
+                    Select SIC
+                  </option>
+                  {pilots &&
+                    pilots.map((pilot) => (
+                      <option key={pilot.id} value={pilot.id}>
+                        {`${pilot.firstName} ${pilot.lastName}`}
+                      </option>
+                    ))}
                 </select>
               </label>
             </div>
           )}
           <div className="form-group">
             <label>
-              Tail Number: 
-              <select value={selectedAircraft} onChange={(e) => setSelectedAircraft(e.target.value)}>
-                <option value="" disabled>Select Aircraft</option>
-                {aircraft && aircraft.map((ac) => (
-                  <option key={ac.id} value={ac.id} id="aircraft">
-                    {`${ac.tailNum}`}
-                  </option>
-                ))}
+              Tail Number:
+              <select
+                value={selectedAircraft}
+                onChange={(e) => setSelectedAircraft(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select Aircraft
+                </option>
+                {aircraft &&
+                  aircraft.map((ac) => (
+                    <option key={ac.id} value={ac.id} id="aircraft">
+                      {`${ac.tailNum}`}
+                    </option>
+                  ))}
               </select>
             </label>
           </div>
           <div className="form-group">
             <label>
-              Departure: 
-              <input 
+              Departure:
+              <input
                 type="text"
                 value={departure}
                 maxLength="4"
@@ -166,11 +206,11 @@ export default function FlightDetailsForm() {
           </div>
           <div className="form-group">
             <label>
-              Arrival: 
-              <input 
+              Arrival:
+              <input
                 type="text"
                 value={arrival}
-                maxLength="4" 
+                maxLength="4"
                 onChange={(e) => setArrival(e.target.value)}
                 id="arrival"
               />

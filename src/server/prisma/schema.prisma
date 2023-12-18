@@ -26,7 +26,6 @@ model Pilot {
   flightsAsPic Flight[] @relation("FlightPic")
   flightsAsSic Flight[] @relation("FlightSic")
   user         User     @relation(fields: [userId], references: [id])
-  
 }
 
 model Flight {
@@ -48,13 +47,13 @@ model Flight {
 }
 
 model FlightTime {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   flightId    Int
   timeStart   DateTime
   timeStop    DateTime?
   dayFlight   Boolean
   nightFlight Boolean
-  flight      Flight   @relation(fields: [flightId], references: [id])
+  flight      Flight    @relation(fields: [flightId], references: [id])
 }
 
 model Aircraft {

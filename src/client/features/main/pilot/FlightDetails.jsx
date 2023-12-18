@@ -23,7 +23,6 @@ const FlightDetails = () => {
     return <div>Loading...</div>;
   }
 
-
   // Calculate total flight hours
   const calculateTotalFlightHours = () => {
     let totalEngineHours = 0;
@@ -34,7 +33,7 @@ const FlightDetails = () => {
 
     if (flight) {
       if (flight.FlightTimes && flight.FlightTimes.length > 0) {
-        const engStart = new Date(flight.engineStartTime)
+        const engStart = new Date(flight.engineStartTime);
         const engStop = new Date(flight.engineStopTime);
         const engHours = (engStop - engStart) / (1000 * 60 * 60);
         totalEngineHours += engHours;
@@ -43,7 +42,7 @@ const FlightDetails = () => {
           const startTime = new Date(time.timeStart);
           const stopTime = time.timeStop ? new Date(time.timeStop) : new Date(); // Use current time if timeStop is not available
           const duration = stopTime - startTime;
-          const hours = duration / (1000 * 60 * 60); 
+          const hours = duration / (1000 * 60 * 60);
           const dayFlight = time.dayFlight;
           totalHours += hours;
 
@@ -60,11 +59,16 @@ const FlightDetails = () => {
         });
       }
     }
-    return {totalEngineHours: totalEngineHours.toFixed(2), totalHours: totalHours.toFixed(2), day: totalDayHours.toFixed(2), night: totalNightHours.toFixed(2), solo: totalSoloHours.toFixed(2) }; // Round to two decimal places
-
+    return {
+      totalEngineHours: totalEngineHours.toFixed(2),
+      totalHours: totalHours.toFixed(2),
+      day: totalDayHours.toFixed(2),
+      night: totalNightHours.toFixed(2),
+      solo: totalSoloHours.toFixed(2),
+    }; // Round to two decimal places
   };
 
-    // Formats the flight.date value to be MM:DD:YY
+  // Formats the flight.date value to be MM:DD:YY
   const formatFlightDate = (flight) => {
     // Get date components
     const flightDate = new Date(flight.date);
@@ -77,16 +81,16 @@ const FlightDetails = () => {
 
     // Create the formatted date string with flight number (MM/DD/YY:N)
     const formattedWithNumber = `${formattedDate}`;
-  
+
     return formattedWithNumber;
   };
 
   const totalFlightHours = calculateTotalFlightHours();
-   
+
   const handleNavClick = (navLink) => {
     navigate(navLink);
-  }
-  
+  };
+
   return (
     <>
       <header>
@@ -94,28 +98,47 @@ const FlightDetails = () => {
         <h1>Fly-By</h1>
         <h2>Flight: {flight && formatFlightDate(flight)}</h2>
       </header>
-        <section className="details">
-          <h3>Flight Details</h3>
-          {flight.pilots[1] ?
-          <p>Pilot in Command: {flight.pilots[1].firstName} {flight.pilots[1].lastName}</p>
-          : <p>Pilot in Command: {flight.pilots[0].firstName} {flight.pilots[0].lastName}</p>}
-          {flight.pilots[1] ?
-          <p>Second in Command: {flight.pilots[0].firstName} {flight.pilots[0].lastName}</p>
-          : ''}
-          <p>Tail Number: {flight.aircraft.tailNum}</p>
-          <p>Airport Departure: {flight.departure}</p>
-          <p>Airport Arrival: {flight.arrival}</p>      
-          <h3>Flight Hours</h3>
-          <p>Engine Runtime: {totalFlightHours.totalEngineHours}</p>
-          <p>Total Flight Time: {totalFlightHours.totalHours}</p>
-          <p>Day Flight Hours: {totalFlightHours.day}</p>
-          <p>Night Flight Hours: {totalFlightHours.night}</p>
-        </section>
-        <div className="button-container">
-          <button onClick={() => handleNavClick(`/pilot/${usrId}/flight_log/${fltId}/update`)}>Edit</button>
-        </div>
+      <section className="details">
+        <h3>Flight Details</h3>
+        {flight.pilots[1] ? (
+          <p>
+            Pilot in Command: {flight.pilots[1].firstName}{" "}
+            {flight.pilots[1].lastName}
+          </p>
+        ) : (
+          <p>
+            Pilot in Command: {flight.pilots[0].firstName}{" "}
+            {flight.pilots[0].lastName}
+          </p>
+        )}
+        {flight.pilots[1] ? (
+          <p>
+            Second in Command: {flight.pilots[0].firstName}{" "}
+            {flight.pilots[0].lastName}
+          </p>
+        ) : (
+          ""
+        )}
+        <p>Tail Number: {flight.aircraft.tailNum}</p>
+        <p>Airport Departure: {flight.departure}</p>
+        <p>Airport Arrival: {flight.arrival}</p>
+        <h3>Flight Hours</h3>
+        <p>Engine Runtime: {totalFlightHours.totalEngineHours}</p>
+        <p>Total Flight Time: {totalFlightHours.totalHours}</p>
+        <p>Day Flight Hours: {totalFlightHours.day}</p>
+        <p>Night Flight Hours: {totalFlightHours.night}</p>
+      </section>
+      <div className="button-container">
+        <button
+          onClick={() =>
+            handleNavClick(`/pilot/${usrId}/flight_log/${fltId}/update`)
+          }
+        >
+          Edit
+        </button>
+      </div>
     </>
-  )
-}
+  );
+};
 
 export default FlightDetails;

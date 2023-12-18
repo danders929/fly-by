@@ -14,7 +14,7 @@ const seed = async () => {
       profile: {
         create: [
           {
-            firstName: "John", 
+            firstName: "John",
             lastName: "Filks",
           },
         ],
@@ -34,7 +34,7 @@ const seed = async () => {
       profile: {
         create: [
           {
-            firstName: "Barry", 
+            firstName: "Barry",
             lastName: "Lamar",
           },
         ],
@@ -52,8 +52,8 @@ const seed = async () => {
     },
   });
 
-   // Seed Aircraft N832SD
-   await prisma.aircraft.create({
+  // Seed Aircraft N832SD
+  await prisma.aircraft.create({
     data: {
       makeModel: "Cessna 120",
       tailNum: "N832SD",
@@ -62,8 +62,8 @@ const seed = async () => {
     },
   });
 
-   // Flight 1 for N334CA
-   await prisma.flight.create({
+  // Flight 1 for N334CA
+  await prisma.flight.create({
     data: {
       solo: true,
       picId: 1,
@@ -81,7 +81,7 @@ const seed = async () => {
             dayFlight: true,
             nightFlight: false,
           },
-        ]
+        ],
       },
       pilots: {
         connect: [
