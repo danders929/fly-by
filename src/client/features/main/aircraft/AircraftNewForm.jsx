@@ -38,7 +38,7 @@ export default function AircraftNewForm() {
   return (
     <>
       <header>
-        <p>Image PlaceHolder</p>
+        <img className="logo" src="/airplane.svg" alt="airplane logo" />
         <h1>Fly-By</h1>
         <h2>New Aircraft Form</h2>
       </header>
