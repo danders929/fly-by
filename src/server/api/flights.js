@@ -119,7 +119,6 @@ router.patch("/:id", async (req, res, next) => {
   }
 });
 
-// *Not needed currently, but may implement later on 
 // /api/flights/:id - DELETE, deletes a flight by id number
 router.delete("/:id", async (req, res, next) => {
   try {

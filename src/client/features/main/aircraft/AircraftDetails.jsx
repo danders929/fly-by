@@ -32,13 +32,15 @@ export default function AircraftDetails(){
         <h1>Fly-By</h1>
         <h2>Aircraft Details</h2>
       </header>
-        <section>
+        <section className="details">
           <p>Tail Number: {aircraftData ? `${aircraftData.tailNum}` : "Loading..."}</p>
           <p>Make/Model: {aircraftData ? `${aircraftData.makeModel}` : "Loading..."}</p>
           <p>Engine Type: {aircraftData ? `${engineType}`: "Loading..."}</p>
           <p>Hobbs Meter: {aircraftData ? `${aircraftData.hobbs}` : "Loading..."}</p>
         </section>
-        <button onClick={() => handleNavClick(`/aircraft/${aircraftId}/update`)}>Edit</button>
+        <div className="button-container">
+          <button onClick={() => handleNavClick(`/aircraft/${aircraftId}/update`)}>Edit</button>
+        </div>
     </>
   )
 }

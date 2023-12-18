@@ -28,6 +28,9 @@ menu {
 }
 
 a {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
   text-decoration: none;
   color: @link-color;
   cursor: pointer;
@@ -41,4 +44,65 @@ a {
 header {
   text-align: center;
   padding: 20px;
+}
+.form-container {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr;
+  justify-items: center; /* Center the items horizontally */
+  align-items: center; /* Center the items vertically */
+  }
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  width: 150px; /* Set a fixed width for the labels */
+  margin-bottom: 5px; /* Add some bottom margin for spacing */
+}
+
+input {
+  width: 100%; /* Make the input fields take up the full width of their container */
+  padding: 8px; /* Add some padding for better appearance */
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; /* Adjust as needed */
+}
+
+.details > * {
+  text-align: center;
+  margin-bottom: 5px ;
+}
+
+.details h3 {
+  text-decoration: underline;
+}
+
+.flight-list {
+  text-align: left;
+}
+
+.flight-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto; /* Center the ul element */
+  display: flex; /* Make it a flex container */
+  flex-direction: column; /* Stack li elements vertically */
+  align-items: center; /* Center li elements horizontally */
+}
+
+.flight-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.flight-list li span {
+  margin-left: 5px;
 }

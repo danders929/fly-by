@@ -49,11 +49,11 @@ export default function AircraftNewForm() {
   return (
     <>
       <header>
-        <p>Image PlaceHolder</p>
+        <img className="logo" src="/airplane.svg" alt="airplane logo" />
         <h1>Fly-By</h1>
         <h2>Aircraft Update Form</h2>
       </header>
-      <form onSubmit={handleSubmit}>
+      <form className="form-container" onSubmit={handleSubmit}>
         <label>
           Tail Number: <input type="text" value={tailNum} onChange={(e) => setTailNum(e.target.value)} />
         </label>

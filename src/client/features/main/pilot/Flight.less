@@ -1,17 +1,39 @@
-.flight-data {
-  margin-top: 20px; /* Adjust as needed */
+.flight-data-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.flight-data table {
-  width: 45%;
+.flight-hours,
+.flight-status {
+  flex: 1;
+  margin-right: 20px; /* Adjust the margin as needed */
+}
+
+.flight-hours td,
+.flight-status td {
+  text-align: left;
+}
+
+/* Additional styling for better visual appearance (optional) */
+.flight-hours {
   border-collapse: collapse;
+  width: 100%;
 }
 
-.flight-data td {
-  padding: 10px; /* Add padding for spacing */
+.flight-hours td,
+.flight-hours th {
+  padding: 8px;
 }
 
-/* Add a margin-right to create a 20px gap between each td */
-.flight-data td:not(:last-child) {
-  margin-right: 20px;
+.flight-status {
+  border-collapse: collapse;
+  width: 100%;
 }
+
+.flight-status td,
+.flight-status th {
+
+  padding: 8px;
+}
+

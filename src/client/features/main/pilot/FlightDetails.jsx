@@ -94,24 +94,26 @@ const FlightDetails = () => {
         <h1>Fly-By</h1>
         <h2>Flight: {flight && formatFlightDate(flight)}</h2>
       </header>
-        <h3>Flight Details</h3>
-        <section>
-          <p>Pilot in Command: {flight.pilots[0].firstName} {flight.pilots[0].lastName}</p>
+        <section className="details">
+          <h3>Flight Details</h3>
           {flight.pilots[1] ?
-          <p>Second in Command: {flight.pilots[1].firstName} {flight.pilots[1].lastName}</p>
+          <p>Pilot in Command: {flight.pilots[1].firstName} {flight.pilots[1].lastName}</p>
+          : <p>Pilot in Command: {flight.pilots[0].firstName} {flight.pilots[0].lastName}</p>}
+          {flight.pilots[1] ?
+          <p>Second in Command: {flight.pilots[0].firstName} {flight.pilots[0].lastName}</p>
           : ''}
           <p>Tail Number: {flight.aircraft.tailNum}</p>
           <p>Airport Departure: {flight.departure}</p>
-          <p>Airport Arrival: {flight.arrival}</p>
-        </section>
-        <h3>Flight Hours</h3>
-        <section>
+          <p>Airport Arrival: {flight.arrival}</p>      
+          <h3>Flight Hours</h3>
           <p>Engine Runtime: {totalFlightHours.totalEngineHours}</p>
           <p>Total Flight Time: {totalFlightHours.totalHours}</p>
           <p>Day Flight Hours: {totalFlightHours.day}</p>
           <p>Night Flight Hours: {totalFlightHours.night}</p>
         </section>
-        <button onClick={() => handleNavClick(`/pilot/${usrId}/flight_log/${fltId}/update`)}>Edit</button>
+        <div className="button-container">
+          <button onClick={() => handleNavClick(`/pilot/${usrId}/flight_log/${fltId}/update`)}>Edit</button>
+        </div>
     </>
   )
 }
